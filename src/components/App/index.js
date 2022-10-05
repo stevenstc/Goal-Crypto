@@ -210,9 +210,8 @@ class App extends Component {
       if(!this.state.baneado){
   
         switch (getString) {
-          case "youtuber":
-          case "myfavorite":
-          case "fan": 
+          case "mundial":
+          case "mundial-vote": 
             return(<Fan wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
           case "staking":
             return(<Staking wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
@@ -220,8 +219,11 @@ class App extends Component {
             return(<Market wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
           case "market-v2":
             return(<MarketV2 wallet={this.state.binanceM} currentAccount={this.state.currentAccount} consulta={this.state.walletconsulta}/>);
-          default:
+          case "inventario":
             return(<Home wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
+          default:
+            return(<Fan wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
+
         }
       }else{
         return(<div style={{'paddingTop': '7em','textAlign':'center'}}><h1>HAS BANNED</h1></div>)

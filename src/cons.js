@@ -20,7 +20,7 @@ var API2 = "https://brutustronstaking.tk/csc/";
 
 var WALLETPAY = "0x00326ad2E5ADb9b95035737fD4c56aE452C2c965";
 
-const TESTNET = false; 
+const TESTNET = true; 
 
 if(TESTNET){
     tokenCSC = "0x038987095f309d3640F51644430dc6C7C4E2E409"//token no correcto
