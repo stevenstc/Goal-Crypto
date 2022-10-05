@@ -83,14 +83,8 @@ class App extends Component {
         window.ethereum.request({ method: 'eth_requestAccounts' })
         .then(async(accounts) => {
 
-          var ban = await fetch(cons.API+"api/v1/user/ban/"+accounts[0]);
-          ban = await ban.text();
-
-          if(ban === "true"){
-            ban = true;
-          }else{
-            ban = false;
-          }
+          var ban = false;
+          
 
           //console.log(accounts)
           this.setState({

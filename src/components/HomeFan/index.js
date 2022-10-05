@@ -82,13 +82,22 @@ export default class HomeFan extends Component {
 
       //{filter:"grayscale(100%)"}
 
-    var eliminated = [
+      /*
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"}
+       */
+
+    var eliminated = [
+      {},{},{},
+      {},{},{},
+      {},{},{},
+      {},{},{},
+      {},{},{},
+      {}
 
     ];
 
@@ -108,7 +117,7 @@ export default class HomeFan extends Component {
         }
         
       }else{
-        valor = valor/10**18;
+        valor = valor/10**18 +" Coins";
       }
 
       if(eliminated[index].filter){
@@ -124,7 +133,7 @@ export default class HomeFan extends Component {
             <h2 className=" pb-2">YouTuber #{index+1}</h2>
             <img
               className=" pb-2"
-              src={"assets/img/youTuber" + index + ".png"}
+              src={"assets/img/VOTACION " + (index+1) + ".png"}
               style={eliminated[index]} 
               width="100%"
               alt=""
@@ -138,9 +147,10 @@ export default class HomeFan extends Component {
               className="position-relative btn-monedas"
               onClick={() => this.votar(index)}
             >
-              <span className="position-absolute top-50 end-0 translate-middle-y p-5" key="vdaj62">
+              <button className="btn btn-success">
                 {valor}
-              </span>
+              </button>
+                
             </div>
             
           </div>
@@ -158,6 +168,10 @@ export default class HomeFan extends Component {
       .call({ from: this.props.currentAccount });
     var myInventario = [];
 
+    var verGanador = await this.props.wallet.contractFan.methods
+      .verGanador()
+      .call({ from: this.props.currentAccount });
+
     for (let index = 0; index < largo; index++) {
       var votos = await this.props.wallet.contractFan.methods
         .votos(index)
@@ -166,10 +180,6 @@ export default class HomeFan extends Component {
       var invent = await this.props.wallet.contractFan.methods
         .verFanItems(this.props.currentAccount, index)
         .call({ from: this.props.currentAccount });
-
-      var verGanador = await this.props.wallet.contractFan.methods
-      .verGanador()
-      .call({ from: this.props.currentAccount });
 
       var claim = (<></>);
 
