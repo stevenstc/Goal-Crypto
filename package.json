@@ -8,7 +8,7 @@
   },
   "author": "crypto-soccer",
   "license": "Apache 2.0",
-  "homepage": "https://stevenstc.github.io/Goal-Crypto/",
+  "homepage": "https://goal-crypto.tk/",
   "dependencies": {
     "@babel/core": "7.8.4",
     "@metamask/detect-provider": "^1.2.0",
