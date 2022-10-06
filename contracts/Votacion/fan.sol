@@ -110,10 +110,10 @@ contract Admin is Context, Ownable{
 contract Voter is Context, Admin{
   using SafeMath for uint256;
 
-  address token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
-  uint256[] fase = [1665086400,1665864000];
-  uint256 precio = 50*10**18; 
-  uint256 aumento = 7*10**18; 
+  address public token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
+  uint256[] public fase = [1665086400,1665864000];
+  uint256 public precio = 50*10**18; 
+  uint256 public aumento = 7*10**18; 
 
   TRC20_Interface CSC_Contract = TRC20_Interface(token);
   
@@ -129,6 +129,9 @@ contract Voter is Context, Admin{
 
   bool[] private base;
   uint256 public pool;
+
+  address[] wallets = [0x9565eFF8Ade3A9AA0a8059EA68d4f32787e1628b,0xBA286Cc49b88e2552Cbe07440765eC8120cC71A3];
+  uint256[] porcents = [10,45];
 
   constructor() {
 
@@ -204,8 +207,8 @@ contract Voter is Context, Admin{
   function valor() public view returns(uint256) {
     uint256 costo = precio;
     if(block.timestamp > fase[0] ){
-      costo = precio.add((block.timestamp).sub(fase[0])).div(86400).mul(aumento);
-
+      costo = ((block.timestamp).sub(fase[0])).div(86400);
+      costo = precio.add(costo.mul(aumento));
     }
     return  costo;
 
@@ -243,12 +246,18 @@ contract Voter is Context, Admin{
       if(fan.items[index])limit++;
     }
     
-    if(valor() > 0 &&  ganador() == 0 && limit <= 3 ){
+    if(valor() > 0 &&  ganador() == 0 && limit < 3 ){
         if(fan.items[_item] == true )revert("item ya adquirido");
     
-        if( CSC_Contract.allowance(_msgSender(), address(this)) < valor() )revert("aprovacion insuficiente");
-        if( CSC_Contract.balanceOf(_msgSender()) < valor() )revert("saldo insuficiente");
         if(!CSC_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("transferencia fallida");
+
+        if(wallets.length > 0){
+          for (uint256 index = 0; index < wallets.length; index++) {
+            CSC_Contract.transfer( wallets[index], valor().mul(porcents[index]).div(1000) );
+            
+          }
+          
+        }
         votos[_item]++;
         fan.items[_item] = true;
         pool += valor();
@@ -281,7 +290,16 @@ contract Voter is Context, Admin{
 
   }
 
-   function updateFases(uint256[] memory _fases) public onlyOwner returns(bool){  
+  function updateWalletsFees(address[] memory _wallets, uint256[] memory _porcents) public onlyOwner returns(bool){  
+    
+    wallets = _wallets;
+    porcents = _porcents;
+
+    return true;
+
+  }
+
+  function updateFases(uint256[] memory _fases) public onlyOwner returns(bool){  
     
     fase = _fases;
 

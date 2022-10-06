@@ -38,6 +38,28 @@ export default class HomeFan extends Component {
 
   async votar(id) {
 
+    var largo = await this.props.wallet.contractFan.methods
+    .largoFanItems(this.props.currentAccount)
+    .call({ from: this.props.currentAccount });
+
+    var votosTeam = 0;
+
+    for (let index = 0; index < largo; index++) {
+
+      var invent = await this.props.wallet.contractFan.methods
+        .verFanItems(this.props.currentAccount, index)
+        .call({ from: this.props.currentAccount });
+        
+      if (invent) {
+        votosTeam++;
+      }
+    }
+
+    if(votosTeam >= 3){
+      alert("max of votes reached");
+      return;
+    }
+
     var aprovado = await this.props.wallet.contractToken.methods
       .allowance(this.props.currentAccount, this.props.wallet.contractFan._address)
       .call({ from: this.props.currentAccount });
@@ -51,16 +73,19 @@ export default class HomeFan extends Component {
       .call({ from: this.props.currentAccount });
 
     if(balance/10**18 >= valor/10**18){
-      if (aprovado > 0) {
-        await this.props.wallet.contractFan.methods
-      .votar(id)
-      .send({ from: this.props.currentAccount });
-      }else{
+      if (aprovado <= 0) {
         await this.props.wallet.contractToken.methods
-      .approve(this.props.wallet.contractFan._address, "115792089237316195423570985008687907853269984665640564039457584007913129639935")
-      .send({ from: this.props.currentAccount });
+        .approve(this.props.wallet.contractFan._address, "115792089237316195423570985008687907853269984665640564039457584007913129639935")
+        .send({ from: this.props.currentAccount });
 
       }
+
+      await this.props.wallet.contractFan.methods
+      .votar(id)
+      .send({ from: this.props.currentAccount });
+
+      alert("Vote is done");
+
     }else{
       alert("insuficient Founds")
     }
@@ -122,7 +147,7 @@ export default class HomeFan extends Component {
         }
         
       }else{
-        valor = valor/10**18 +" Coins";
+        valor = valor/10**18 +" GCP";
       }
 
       if(eliminated[index].filter){
@@ -169,8 +194,9 @@ export default class HomeFan extends Component {
 
   async myItems() {
     var largo = await this.props.wallet.contractFan.methods
-      .largoFanItems(this.props.currentAccount)
-      .call({ from: this.props.currentAccount });
+    .largoFanItems(this.props.currentAccount)
+    .call({ from: this.props.currentAccount });
+
     var myInventario = [];
 
     var verGanador = await this.props.wallet.contractFan.methods
@@ -188,7 +214,7 @@ export default class HomeFan extends Component {
 
       var claim = (<></>);
 
-      console.log(verGanador);
+      //console.log(verGanador);
 
         if(verGanador[0]){
 
@@ -215,13 +241,14 @@ export default class HomeFan extends Component {
         myInventario[index] = (
             <div className="col-lg-4 col-md-12 p-4 mb-5 text-center monedas" key={`items-${index}`}>
               <h2 className=" pb-4">Team #{index+1}</h2>
+              <p>{votos} global votes</p>
               <img
                 className=" pb-4"
                 src={"assets/img/VOTACION " + (index+1) + ".png"}
                 width="100%"
                 alt=""
               />
-              <p>{votos} global votes</p>
+              
               {claim}
             </div>
         );
@@ -241,8 +268,9 @@ export default class HomeFan extends Component {
             <div className="container px-5">
               <div className="row">
                 <div className="col-lg-12 col-md-12 p-4 text-center" key="headitems">
-                  <h2 className=" pb-4">Vote for your favorite mundial team (3 team max)</h2>
+                  <h2 className=" pb-4">Vote for your favorite mundial team  (max 3)</h2>
                   <p>Only one (1) vote can be per team </p>
+                  <p>Vote with your GCP tokens for your favorite team to win the World Cup, 90% of the pool accumulated among the voters will be distributed equally among the voters of the winning team of the World Cup.</p>
                 </div>
 
                 {this.state.itemsYoutube}
@@ -292,7 +320,7 @@ export default class HomeFan extends Component {
 
           <div style={{ marginTop: "30px" }} className="row text-center">
             <div className="col-md-12">
-              <h3>Account inventory</h3>{" "}
+              <h3>Account Votes</h3>{" "}
               <button
                 className="btn btn-primary"
                 onClick={() => this.myItems()}
