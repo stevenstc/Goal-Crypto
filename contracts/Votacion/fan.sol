@@ -110,7 +110,7 @@ contract Admin is Context, Ownable{
 contract Voter is Context, Admin{
   using SafeMath for uint256;
 
-  address token = 0x55d398326f99059fF775485246999027B3197955;
+  address token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
   uint256[] fase = [1635872400, 1636225200, 1667139000, 1667139649];
   uint256[] precios = [50*10**18, 75*10**18, 100*10**18]; 
   TRC20_Interface CSC_Contract = TRC20_Interface(token);
