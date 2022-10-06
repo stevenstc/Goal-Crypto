@@ -135,7 +135,7 @@ export default class HomeFan extends Component {
 
       itemsYoutube[index] = (
           <div className="col-lg-3 col-md-6 p-3 mb-5 text-center monedas position-relative" key={`items-${index}`}>
-            <h2 className=" pb-2">YouTuber #{index+1}</h2>
+            <h2 className=" pb-2">Team #{index+1}</h2>
             <img
               className=" pb-2"
               src={"assets/img/VOTACION " + (index+1) + ".png"}
@@ -214,10 +214,10 @@ export default class HomeFan extends Component {
       if (invent) {
         myInventario[index] = (
             <div className="col-lg-4 col-md-12 p-4 mb-5 text-center monedas" key={`items-${index}`}>
-              <h2 className=" pb-4">YouTuber #{index+1}</h2>
+              <h2 className=" pb-4">Team #{index+1}</h2>
               <img
                 className=" pb-4"
-                src={`assets/img/youTuber${index}.png`}
+                src={"assets/img/VOTACION " + (index+1) + ".png"}
                 width="100%"
                 alt=""
               />
@@ -241,8 +241,8 @@ export default class HomeFan extends Component {
             <div className="container px-5">
               <div className="row">
                 <div className="col-lg-12 col-md-12 p-4 text-center" key="headitems">
-                  <h2 className=" pb-4">Vote for your favorite streamer</h2>
-                  <p>Only one (1) vote can be per streamer </p>
+                  <h2 className=" pb-4">Vote for your favorite mundial team (3 team max)</h2>
+                  <p>Only one (1) vote can be per team </p>
                 </div>
 
                 {this.state.itemsYoutube}

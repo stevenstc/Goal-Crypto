@@ -111,7 +111,7 @@ contract Voter is Context, Admin{
   using SafeMath for uint256;
 
   address token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
-  uint256[] fase = [1635872400, 1667139649];
+  uint256[] fase = [1665086400,1665864000];
   uint256 precio = 50*10**18; 
   uint256 aumento = 7*10**18; 
 
@@ -202,8 +202,12 @@ contract Voter is Context, Admin{
   }
 
   function valor() public view returns(uint256) {
+    uint256 costo = precio;
+    if(block.timestamp > fase[0] ){
+      costo = precio.add((block.timestamp).sub(fase[0])).div(86400).mul(aumento);
 
-    return  precio.add(block.timestamp-fase[0]).div(86400).mul(aumento);
+    }
+    return  costo;
 
   }
 
@@ -225,15 +229,21 @@ contract Voter is Context, Admin{
 
   function votar(uint256 _item) public returns(bool){  
       
-      Fan storage fan = fans[_msgSender()];
+    Fan storage fan = fans[_msgSender()];
 
     if(fan.items.length != base.length){
-        fan.registrado=true;
-        fan.items= base;
+      fan.registrado=true;
+      fan.items= base;
           
     }
+
+    uint256 limit = 0;
+
+    for (uint256 index = 0; index < fan.items.length; index++) {
+      if(fan.items[index])limit++;
+    }
     
-    if(valor() > 0 &&  ganador() == 0){
+    if(valor() > 0 &&  ganador() == 0 && limit <= 3 ){
         if(fan.items[_item] == true )revert("item ya adquirido");
     
         if( CSC_Contract.allowance(_msgSender(), address(this)) < valor() )revert("aprovacion insuficiente");
@@ -244,7 +254,7 @@ contract Voter is Context, Admin{
         pool += valor();
         return true;
     }else{
-        return false;
+        revert("no puedes votar mas");
     }
     
     
