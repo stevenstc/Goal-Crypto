@@ -111,25 +111,33 @@ contract Voter is Context, Admin{
   using SafeMath for uint256;
 
   address token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
-  uint256[] fase = [1635872400, 1636225200, 1667139000, 1667139649];
-  uint256[] precios = [50*10**18, 75*10**18, 100*10**18]; 
+  uint256[] fase = [1635872400, 1667139649];
+  uint256 precio = 50*10**18; 
+  uint256 aumento = 7*10**18; 
+
   TRC20_Interface CSC_Contract = TRC20_Interface(token);
   
   struct Fan {
-      bool registrado;
-      bool[] items;
+    bool registrado;
+    bool[] items;
   }
 
   mapping (address => Fan) public fans;
 
-  bool[] public items = [false, false, false, false, false];
-  uint256[] public votos = [0,0,0,0,0];
+  bool[] public items;
+  uint256[] public votos;
 
-  bool[] private base = items;
-
+  bool[] private base;
   uint256 public pool;
 
   constructor() {
+
+    for (uint256 index = 0; index < 32; index++) {
+      items.push(false);
+      votos.push(0);
+    }
+
+    base = items;
       
       Fan memory fan;
       fan=Fan({
@@ -171,9 +179,6 @@ contract Voter is Context, Admin{
 
     return resultado;
   }
-
-  
-
   
   function setGanador(uint256 _item) public onlyOwner returns(uint256){  
     
@@ -197,25 +202,8 @@ contract Voter is Context, Admin{
   }
 
   function valor() public view returns(uint256) {
-      
-      if(block.timestamp >= fase[0] && block.timestamp < fase[1]){
-        return precios[0];
 
-      }
-
-      if(block.timestamp >= fase[1] && block.timestamp < fase[2]){
-        return precios[1];
-
-      }
-
-      if(block.timestamp >= fase[2] && block.timestamp < fase[3]){
-        return precios[2];
-
-      }
-      
-      return 0;
-
-      
+    return  precio.add(block.timestamp-fase[0]).div(86400).mul(aumento);
 
   }
 
@@ -291,9 +279,10 @@ contract Voter is Context, Admin{
 
   }
 
-  function updatePrecios(uint256[] memory _precios) public onlyOwner returns(bool){  
+  function updatePrecios(uint256 _precio, uint256 _aumento) public onlyOwner returns(bool){  
     
-    precios = _precios;
+    precio = _precio;
+    aumento = _aumento;
 
     return true;
 
