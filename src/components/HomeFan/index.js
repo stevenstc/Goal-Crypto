@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+var BigNumber = require('bignumber.js');
+BigNumber.config({ ROUNDING_MODE: 3 });
 
 export default class HomeFan extends Component {
   constructor(props) {
@@ -8,6 +10,7 @@ export default class HomeFan extends Component {
       myInventario: [],
       itemsYoutube: [],
       balanceCSC: 0,
+      balanceContract: 0
     };
 
     this.balance = this.balance.bind(this);
@@ -25,14 +28,21 @@ export default class HomeFan extends Component {
   }
 
   async balance() {
-    var balance =
-      await this.props.wallet.contractToken.methods
-        .balanceOf(this.props.currentAccount)
-        .call({ from: this.props.currentAccount });
-    balance = balance.slice(0,balance.length-12);
-    balance = balance.slice(0,balance.length-6)+"."+balance.slice(balance.length-6,balance.length);
+    var balance = await this.props.wallet.contractToken.methods
+    .balanceOf(this.props.currentAccount).call({ from: this.props.currentAccount });
+
+    balance = new BigNumber(balance).shiftedBy(-18).decimalPlaces(6).toString(10);
+
+
+    var balanceContract = await this.props.wallet.contractToken.methods
+    .balanceOf(this.props.wallet.contractFan._address).call({ from: this.props.currentAccount });
+
+    balanceContract = new BigNumber(balanceContract).shiftedBy(-18).decimalPlaces(2).toString(10);
+
+
     this.setState({
-      balanceCSC: balance
+      balanceCSC: balance,
+      balanceContract: balanceContract
     });
   }
 
@@ -166,22 +176,19 @@ export default class HomeFan extends Component {
               src={"assets/img/VOTACION " + (index+1) + ".png"}
               style={eliminated[index]} 
               width="100%"
-              alt=""
+              alt="equipo del mundial"
             />
 
             <h2 className="centradoFan">
               <b>{votos} votes</b>
             </h2>
-            
-            <div
-              className="position-relative btn-monedas"
-              onClick={() => this.votar(index)}
-            >
-              <button className="btn btn-success">
-                {valor}
-              </button>
-                
+
+            <div class="contenedor" onClick={() => this.votar(index)} style={{cursor:"pointer"}}>
+              <img src="assets/img/boton.png" alt="goal crypto boton" width="70%"/>
+              <div class="centrado"><b>{valor}</b></div>
             </div>
+            
+           
             
           </div>
       );
@@ -268,9 +275,15 @@ export default class HomeFan extends Component {
             <div className="container px-5">
               <div className="row">
                 <div className="col-lg-12 col-md-12 p-4 text-center" key="headitems">
-                  <h2 className=" pb-4">Vote for your favorite mundial team  (max 3)</h2>
-                  <p>Only one (1) vote can be per team </p>
+                  <h2 className=" pb-4">Vote for your favorite mundial team</h2>
+                  <p>Only one (1) vote can be per team (max 3)</p>
                   <p>Vote with your GCP tokens for your favorite team to win the World Cup, 90% of the pool accumulated among the voters will be distributed equally among the voters of the winning team of the World Cup.</p>
+                  <h2 className=" pb-4">Pool accumulated</h2>
+                
+                  <div class="contenedor" style={{cursor:"pointer"}}>
+                    <img src="assets/img/boton.png" alt="goal crypto boton" width="80%"/>
+                    <div class="centrado"><h3><b>{this.state.balanceContract} GCP</b></h3></div>
+                  </div>
                 </div>
 
                 {this.state.itemsYoutube}
