@@ -183,9 +183,12 @@ export default class HomeFan extends Component {
               <b>{votos} votes</b>
             </h2>
 
+
             <div class="contenedor" onClick={() => this.votar(index)} style={{cursor:"pointer"}}>
-              <img src="assets/img/boton.png" alt="goal crypto boton" width="70%"/>
-              <div class="centrado"><b>{valor}</b></div>
+              <div class="centrado" id="content_div_one_photo">
+                <img src="assets/img/moneda.png" alt="goal crypto boton" width="30px"/>
+                {"  "}<b>{valor}</b>
+                </div>
             </div>
             
            
@@ -280,10 +283,9 @@ export default class HomeFan extends Component {
                   <p>Vote with your GCP tokens for your favorite team to win the World Cup, 90% of the pool accumulated among the voters will be distributed equally among the voters of the winning team of the World Cup.</p>
                   <h2 className=" pb-4">Pool accumulated</h2>
                 
-                  <div class="contenedor" style={{cursor:"pointer"}}>
-                    <img src="assets/img/boton.png" alt="goal crypto boton" width="80%"/>
-                    <div class="centrado"><h3><b>{this.state.balanceContract} GCP</b></h3></div>
-                  </div>
+                  <h3><img src="assets/img/moneda.png" alt="goal crypto boton" width="50px"/>
+                    {" "}<b>{this.state.balanceContract} GCP</b></h3>
+                  
                 </div>
 
                 {this.state.itemsYoutube}
