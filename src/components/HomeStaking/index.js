@@ -140,14 +140,35 @@ export default class HomeStaking extends Component {
   render() {
     return (
       <>
+        <img className="img-fluid" src="assets/img/banner stake.png" ></img>
         <header className="masthead text-center text-white">
           <div className="masthead-content">
             <div className="container px-5">
               <div className="row justify-content-md-center">
                 <div className="col-md-auto text-center">
-                  <h2 className=" pb-4">STAKING YOUR CSC</h2>
+                  <h2 className=" pb-4">STAKING TOKEN GCP</h2>
+                  <p>Automatically and daily generate more GCP tokens</p>
+              
+                </div>
+
+              </div>
+
+              <div className="row justify-content-md-center">
+
+
+                <div className="col-6 text-center">
+                  <h3 className=" pb-4">POOL STAKING</h3>
+     
+                </div>
+
+                <div className="col-6 text-center">
+                  <h3 className=" pb-4">TOKENS GCP LOKED</h3>
+     
+                </div>
+
+                <div className="col-md-auto text-center">
                   <input type="number" className="form-control" id="cantidadCSC" placeholder="Min. 200 CSC"/><br />
-                  <button className="btn btn-warning" onClick={()=> this.staking()}><b>Stake CSC</b></button>
+                  <button className="btn btn-warning" onClick={()=> this.staking()}><b>Stake GCP</b></button>
 
                 </div>
 
@@ -162,7 +183,7 @@ export default class HomeStaking extends Component {
                     <img src="assets/img/STAKE.png" width="270px"  alt=""/>
                     <div className="centradoStake">
                       <h3 className=" pb-4">
-                        {this.state.staked} CSC {" "} {this.state.claim}
+                        {this.state.staked} GCP {" "} {this.state.claim}
                       </h3>
                     </div>
                 </div>

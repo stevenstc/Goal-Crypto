@@ -184,8 +184,8 @@ export default class HomeFan extends Component {
             </h2>
 
 
-            <div class="contenedor" onClick={() => this.votar(index)} style={{cursor:"pointer"}}>
-              <div class="centrado" id="content_div_one_photo">
+            <div className="contenedor" onClick={() => this.votar(index)} style={{cursor:"pointer"}}>
+              <div className="centrado" id="content_div_one_photo">
                 <img src="assets/img/moneda.png" alt="goal crypto boton" width="30px"/>
                 {"  "}<b>{valor}</b>
                 </div>
@@ -273,6 +273,9 @@ export default class HomeFan extends Component {
   render() {
     return (
       <>
+
+        <img className="img-fluid" src="images/hero_bg_4.png"></img>
+
         <header className="masthead text-center text-white">
           <div className="masthead-content">
             <div className="container px-5">
