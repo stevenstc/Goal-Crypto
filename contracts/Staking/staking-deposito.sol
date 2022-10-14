@@ -201,6 +201,13 @@ contract StakingPool is Context, Admin{
     return partcip;
   }
 
+  function pagarDividendos() public{
+
+    PAYER_POOL_BALANCE += DISTRIBUTION_POOL.mul(2).div(100);
+    lastPay = block.timestamp;
+
+  }
+
   function dividendos(address _user) public view returns (uint[] memory){
 
     uint[] memory userpart = participacion(_user);
@@ -256,7 +263,7 @@ contract StakingPool is Context, Admin{
     if(totalDividendosAPagar(msg.sender) > 0){
       retiroDividendos(msg.sender);
     }
-    if(fecha[msg.sender][_deposito] < block.timestamp)revert();
+    if(fecha[msg.sender][_deposito]+1*86400 < block.timestamp)revert();
     
     if(TOTAL_PARTICIPACIONES < deposito[msg.sender][_deposito])revert();
     if( !CSC_Contract.transfer(msg.sender, deposito[msg.sender][_deposito]) )revert();

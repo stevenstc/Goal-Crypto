@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+var BigNumber = require('bignumber.js');
+BigNumber.config({ ROUNDING_MODE: 3 });
 
 export default class HomeStaking extends Component {
   constructor(props) {
@@ -24,10 +26,28 @@ export default class HomeStaking extends Component {
   }
 
   async balance() {
-    var val = await this.props.wallet.contractToken.methods
-        .balanceOf(this.props.currentAccount)
-        .call({ from: this.props.currentAccount });
-    document.getElementById("getValue").innerHTML = (val/10**18).toFixed(8);
+    var balance = await this.props.wallet.contractToken.methods
+    .balanceOf(this.props.currentAccount)
+    .call({ from: this.props.currentAccount });
+    balance = new BigNumber(balance).shiftedBy(-18).decimalPlaces(6).toString(10)
+
+
+    var bloqueado = await this.props.wallet.contractStaking.methods
+    .TOTAL_PARTICIPACIONES()
+    .call({ from: this.props.currentAccount });
+    bloqueado = new BigNumber(bloqueado).shiftedBy(-18).decimalPlaces(6).toString(10)
+
+
+    var pool = await this.props.wallet.contractStaking.methods
+    .DISTRIBUTION_POOL()
+    .call({ from: this.props.currentAccount });
+    pool = new BigNumber(pool).shiftedBy(-18).decimalPlaces(6).toString(10)
+
+    this.setState({
+      balance: balance,
+      bloqueado: bloqueado,
+      pool: pool
+    }) 
   }
 
   async staking() {
@@ -59,14 +79,6 @@ export default class HomeStaking extends Component {
       .inicio()
       .call({ from: this.props.currentAccount });
 
-    var fin = await this.props.wallet.contractStaking.methods
-      .fin()
-      .call({ from: this.props.currentAccount });
-
-    if(Date.now() >= fin*1000 ){
-      alert("staking ended");
-      return;
-    }
 
     if(balance >= parseInt(valor*10**18)){
         if (aprovado > 0) {
@@ -92,35 +104,15 @@ export default class HomeStaking extends Component {
 
   async myStake() {
 
-    var rate = await this.props.wallet.contractStaking.methods
-      .RATE()
+    var dividendos = await this.props.wallet.contractStaking.methods
+      .totalDividendos(this.props.currentAccount)
       .call({ from: this.props.currentAccount });
 
-    var usuario = await this.props.wallet.contractStaking.methods
-      .usuarios(this.props.currentAccount)
-      .call({ from: this.props.currentAccount });
+    dividendos = new BigNumber(dividendos).shiftedBy(-18).toString(10)
 
-      var stake = (usuario*rate/10**36);
-
-      if (stake > 999) {
-        stake = stake.toFixed(6);
-      }else{
-        stake = stake.toFixed(8);
-      }
-
-      var fin = await this.props.wallet.contractStaking.methods
-      .fin()
-      .call({ from: this.props.currentAccount });
-
-      var claim = <></>;
-
-      if(Date.now() >= fin*1000 && parseInt(usuario) !== 0){
-        claim = (<><button className="btn btn-warning" onClick={() => this.retiro()}>Claim</button></>);
-      }
 
     this.setState({
-      staked: stake,
-      claim: claim
+      staked: dividendos
     }) 
     
   }
@@ -158,13 +150,13 @@ export default class HomeStaking extends Component {
 
                 <div className="col-6 text-center">
                   <h3 className=" ">POOL STAKING</h3>
-                  <h4> <img height="50px" src="assets/img/monton-monedas.png" alt="gcp monton de monedas"></img> 1234.5678 GCP</h4>
+                  <h4> <img height="50px" src="assets/img/monton-monedas.png" alt="gcp monton de monedas"></img> {this.state.pool} GCP</h4>
      
                 </div>
 
                 <div className="col-6 text-center">
                   <h3 className=" ">TOKENS GCP LOKED</h3>
-                  <h4> <img height="50px" src="assets/img/moneda.png" alt="gcp monton de monedas"></img> 1234.5678 GCP</h4>
+                  <h4> <img height="50px" src="assets/img/moneda.png" alt="gcp monton de monedas"></img> {this.state.bloqueado} GCP</h4>
 
      
                 </div>
@@ -192,7 +184,7 @@ export default class HomeStaking extends Component {
 
                 <div className="col-md-auto text-center">
                   <h3 className=" ">YOUR REWARDS</h3>
-                  <p>{this.state.staked} GCP {" "} {this.state.claim}</p>
+                  <p>{this.state.staked} GCP</p>
                   
                  <button className="btn btn-warning" onClick={()=> this.staking()}><b>Claim GCP</b></button>
 
@@ -246,7 +238,7 @@ export default class HomeStaking extends Component {
           <div className="row text-center">
             <div className="col-md-12">
               <span>
-                Current balance: <i id="getValue">loading...</i>{" "}
+                Current balance: {this.state.balance}
                 <button
                   className="btn btn-primary"
                   onClick={async () => this.balance()}

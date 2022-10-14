@@ -29,7 +29,7 @@ if(TESTNET){
     TOKEN = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"; //token de pruebas
     SC = "0xCB553b2128fAb586E8C6601983cdb134eaBdd989";//"0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";// contrato test market
     SC2 = "0xF5bADF480929494c83d489D15b7807604E37616B";// contrado test votacion
-    SC3 = "0xebCC8F716087B6Bd4AF31759B8F7041ebEC5E820";// contrado test Staking
+    SC3 = "0x1dD55029cB7Ed732D9dB680CeDdd76D421F68bDf";// contrado test Staking
     SC5 = "0xEeAB65c0e3076985E2aDBd8119D8e5B4784185c5"; // Inventario
     SC6 = "0x082621b836f5212731Ea2c6849f4D91813169B72"; // Exchange
     chainId = '0x61';
