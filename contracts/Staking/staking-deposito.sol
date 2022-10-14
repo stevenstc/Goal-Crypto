@@ -123,7 +123,6 @@ contract StakingPool is Context, Admin{
   mapping(address => uint256[]) public deposito;
   mapping(address => uint256[]) public fecha;
   mapping(address => uint256[]) public retirado;
-  mapping(address => bool[]) public reclamado;
 
 
   uint public MIN_DEPOSIT = 10 * 10**18;
@@ -161,17 +160,12 @@ contract StakingPool is Context, Admin{
 
   }
   
-  function compra(uint _value) public view returns(uint){
-    return (_value.mul(10**precision)).div(RATE());
-  }
-  
   function staking(uint _token) public  {
 
     if(block.timestamp < inicio )revert();
     if(_token < MIN_DEPOSIT)revert();
     if( !CSC_Contract.transferFrom(msg.sender, address(this), _token) )revert();
 
-    reclamado[msg.sender].push(false);
     fecha[msg.sender].push(block.timestamp);
     deposito[msg.sender].push(_token);
     retirado[msg.sender].push(0);
@@ -180,54 +174,102 @@ contract StakingPool is Context, Admin{
 
   }
   
-  function pago(uint _value) public view returns (uint256){
-    _value = _value.mul(RATE());
-    return _value.div(10**precision);
-  }
-
-  function depositoTotal(address _user) public view returns (uint256){
-
-    uint _value = 0;
-    for (uint256 index = 0; index < deposito[_user].length; index++) {
-      if (!reclamado[msg.sender][index]) {
-        _value += deposito[msg.sender][index];
-      } 
-    }
-    return _value;
+  function depositoTotal(address _user) public view returns (uint256[] memory){
+    return deposito[_user];
   }
 
   function retiradoTotal(address _user) public view returns (uint256){
 
     uint _value = 0;
     for (uint256 index = 0; index < deposito[_user].length; index++) {
-      if (!reclamado[msg.sender][index]) {
-        _value += retirado[msg.sender][index];
-      } 
+      _value += retirado[_user][index];
+      
     }
     return _value;
   }
 
-  function participacion(address _user) public view returns (uint256){
+  function participacion(address _user) public view returns (uint [] memory){
 
-    return (depositoTotal(_user).mul(10**precision)).div(TOTAL_PARTICIPACIONES*100);
+    uint[] memory userpo = depositoTotal(_user);
+
+    uint[] memory partcip;
+
+    for (uint256 index = 0; index < userpo.length; index++) {
+      partcip[index] = (userpo[index].mul(10**precision)).div(TOTAL_PARTICIPACIONES*100) ;
+    }
+
+    return partcip;
   }
 
-  function dividendos(address _user) public view returns (uint256){
+  function dividendos(address _user) public view returns (uint[] memory){
 
-    return (((PAYER_POOL_BALANCE.mulparticipacion(_user)).div(10**precision))).sub(retiradoTotal(_user));
+    uint[] memory userpart = participacion(_user);
+
+    uint[] memory totDiv;
+
+    for (uint256 index = 0; index < userpart.length; index++) {
+      totDiv[index] = (PAYER_POOL_BALANCE.mul(userpart[index])).div(10**precision) ;
+    }
+
+    return totDiv;
+  }
+
+  function totalDividendos(address _user) public view returns (uint){
+
+    uint[] memory userpart = dividendos(_user);
+
+    uint totDiv;
+
+    for (uint256 index = 0; index < userpart.length; index++) {
+      totDiv += userpart[index] ;
+    }
+
+    return totDiv;
+  }
+
+  function totalDividendosAPagar(address _user) public view returns (uint){
+
+    uint[] memory userpart = dividendos(_user);
+
+    uint totDiv;
+
+    for (uint256 index = 0; index < userpart.length; index++) {
+      totDiv += userpart[index] ;
+    }
+
+    return (totDiv).sub(retiradoTotal(_user));
+  }
+
+
+  function retiroDividendos(address _user) public {
+
+    if( !CSC_Contract.transfer(msg.sender, totalDividendosAPagar(_user) ))revert();
+
+    for (uint256 index = 0; index < dividendos(_user).length; index++) {
+      retirado[_user][index] += dividendos(_user)[index];
+    }
+
   }
 
   function retiro(uint _deposito) public {
 
-    if(_deposito > reclamado[msg.sender].length)revert();
-    if(reclamado[msg.sender][_deposito])revert();
+    if(totalDividendosAPagar(msg.sender) > 0){
+      retiroDividendos(msg.sender);
+    }
     if(fecha[msg.sender][_deposito] < block.timestamp)revert();
     
     if(TOTAL_PARTICIPACIONES < deposito[msg.sender][_deposito])revert();
     if( !CSC_Contract.transfer(msg.sender, deposito[msg.sender][_deposito]) )revert();
-
     TOTAL_PARTICIPACIONES -= deposito[msg.sender][_deposito];
-    reclamado[msg.sender][_deposito] = true;
+
+    deposito[msg.sender][_deposito] = deposito[msg.sender][deposito[msg.sender].length - 1];
+    deposito[msg.sender].pop();
+
+    fecha[msg.sender][_deposito] = fecha[msg.sender][fecha[msg.sender].length - 1];
+    fecha[msg.sender].pop();
+
+    retirado[msg.sender][_deposito] = retirado[msg.sender][retirado[msg.sender].length - 1];
+    retirado[msg.sender].pop();
 
   }
 

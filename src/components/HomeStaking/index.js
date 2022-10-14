@@ -158,41 +158,42 @@ export default class HomeStaking extends Component {
 
                 <div className="col-6 text-center">
                   <h3 className=" pb-4">POOL STAKING</h3>
+                  <h4> <img height="50px" src="assets/img/monton-monedas.png" alt="gcp monton de monedas"></img> 1234.5678 GCP</h4>
      
                 </div>
 
                 <div className="col-6 text-center">
                   <h3 className=" pb-4">TOKENS GCP LOKED</h3>
+                  <h4> <img height="50px" src="assets/img/moneda.png" alt="gcp monton de monedas"></img> 1234.5678 GCP</h4>
+
      
                 </div>
 
+              </div>
+              <div className="row justify-content-md-center">
+
                 <div className="col-md-auto text-center">
-                  <input type="number" className="form-control" id="cantidadCSC" placeholder="Min. 200 CSC"/><br />
+                  <h3 className=" pb-4">LOKED YOUR TOKENS GCP / 60 DAYS</h3>
+
+                  <input type="number" className="form-control" id="cantidadCSC" placeholder="Min. 60 GCP"/><br />
                   <button className="btn btn-warning" onClick={()=> this.staking()}><b>Stake GCP</b></button>
 
                 </div>
 
               </div>
+              <div className="row justify-content-md-center">
 
-              <div className="row justify-content-md-center mt-5">
-                <div className="col-md-auto text-center position-relative">
-                    <img src="assets/img/stake01.png" width="270px" alt=""/>
-                </div>
+                <div className="col-md-auto text-center">
+                  <h3 className=" pb-4">YOUR REWARDS</h3>
+                  <p>{this.state.staked} GCP {" "} {this.state.claim}</p>
+                  
 
-                <div className="col-md-auto text-center position-relative">
-                    <img src="assets/img/STAKE.png" width="270px"  alt=""/>
-                    <div className="centradoStake">
-                      <h3 className=" pb-4">
-                        {this.state.staked} GCP {" "} {this.state.claim}
-                      </h3>
-                    </div>
-                </div>
+                 <button className="btn btn-warning" onClick={()=> this.staking()}><b>Claim GCP</b></button>
 
-                <div className="col-md-auto text-center position-relative">
-                    <img src="assets/img/stake02.png" width="270px"  alt=""/>
                 </div>
 
               </div>
+
             </div>
           </div>
         </header>
