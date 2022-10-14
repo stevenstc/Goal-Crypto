@@ -22,7 +22,7 @@ export default class HomeStaking extends Component {
     setInterval(() => {
       this.balance();
       this.myStake();
-    }, 1 * 1000);
+    }, 3 * 1000);
   }
 
   async balance() {
@@ -104,15 +104,31 @@ export default class HomeStaking extends Component {
 
   async myStake() {
 
-    var dividendos = await this.props.wallet.contractStaking.methods
+    var dividendos = 0/*await this.props.wallet.contractStaking.methods
       .totalDividendos(this.props.currentAccount)
-      .call({ from: this.props.currentAccount });
+      .call({ from: this.props.currentAccount });*/
 
     dividendos = new BigNumber(dividendos).shiftedBy(-18).toString(10)
 
+    var depositos = await this.props.wallet.contractStaking.methods
+    .depositoTotal(this.props.currentAccount)
+    .call({ from: this.props.currentAccount });
+    
+
+    var listaDepositos = [];
+    for (let index = 0; index < depositos.length; index++) {
+      var valor = new BigNumber(depositos[index]).shiftedBy(-18).decimalPlaces(6).toString(10)
+      listaDepositos[index] = (<div key={"cosal"+index}>
+      
+        <p>{valor} GCP <button className="btn btn-success">Un-Stake</button></p>
+      
+      </div>);
+      
+    }
 
     this.setState({
-      staked: dividendos
+      staked: dividendos,
+      listaDepositos: listaDepositos
     }) 
     
   }
@@ -197,9 +213,7 @@ export default class HomeStaking extends Component {
                 <div className="col-md-auto text-center">
                   <h3 className=" ">YOUR DEPOSITS</h3>
                   
-                  <p>10 GCP <button className="btn btn-warming">Un-Stake</button></p>
-                  <p>20 GCP <button className="btn btn-success">Un-Stake</button></p>
-                  <p>40 GCP <button className="btn btn-warming">Un-Stake</button></p>
+                  {this.state.listaDepositos}
 
 
                 </div>

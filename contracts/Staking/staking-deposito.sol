@@ -139,7 +139,6 @@ contract StakingPool is Context, Admin{
   constructor() { }
 
 
-
   function CSC_PAY_BALANCE() public view returns (uint){
     return address(this).balance;
   }
@@ -174,11 +173,11 @@ contract StakingPool is Context, Admin{
 
   }
   
-  function depositoTotal(address _user) public view returns (uint256[] memory){
+  function depositoTotal(address _user) public view returns (uint[] memory){
     return deposito[_user];
   }
 
-  function retiradoTotal(address _user) public view returns (uint256){
+  function retiradoTotal(address _user) public view returns (uint){
 
     uint _value = 0;
     for (uint256 index = 0; index < deposito[_user].length; index++) {
@@ -187,12 +186,13 @@ contract StakingPool is Context, Admin{
     }
     return _value;
   }
+  
 
   function participacion(address _user) public view returns (uint [] memory){
 
     uint[] memory userpo = depositoTotal(_user);
 
-    uint[] memory partcip;
+    uint[] memory partcip = new uint[](userpo.length);
 
     for (uint256 index = 0; index < userpo.length; index++) {
       partcip[index] = (userpo[index].mul(10**precision)).div(TOTAL_PARTICIPACIONES*100) ;
@@ -212,7 +212,7 @@ contract StakingPool is Context, Admin{
 
     uint[] memory userpart = participacion(_user);
 
-    uint[] memory totDiv;
+    uint[] memory totDiv = new uint[](userpart.length);
 
     for (uint256 index = 0; index < userpart.length; index++) {
       totDiv[index] = (PAYER_POOL_BALANCE.mul(userpart[index])).div(10**precision) ;
@@ -286,7 +286,7 @@ contract StakingPool is Context, Admin{
     return true;
   }
 
-  function redimCSC(uint _value) public onlyOwner returns (uint256) {
+  function redimCSC(uint _value) public onlyOwner returns (uint) {
 
     if ( CSC_Contract.balanceOf(address(this)) < _value)revert();
 
@@ -296,7 +296,7 @@ contract StakingPool is Context, Admin{
 
   }
 
-  function redimOTRO() public onlyOwner returns (uint256){
+  function redimOTRO() public onlyOwner returns (uint){
 
     uint256 valor = OTRO_Contract.balanceOf(address(this));
 
@@ -305,7 +305,7 @@ contract StakingPool is Context, Admin{
     return valor;
   }
 
-  function redimBNB() public onlyOwner returns (uint256){
+  function redimBNB() public onlyOwner returns (uint){
 
     if ( address(this).balance == 0)revert();
 
