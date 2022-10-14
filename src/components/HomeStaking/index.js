@@ -157,41 +157,62 @@ export default class HomeStaking extends Component {
 
 
                 <div className="col-6 text-center">
-                  <h3 className=" pb-4">POOL STAKING</h3>
+                  <h3 className=" ">POOL STAKING</h3>
                   <h4> <img height="50px" src="assets/img/monton-monedas.png" alt="gcp monton de monedas"></img> 1234.5678 GCP</h4>
      
                 </div>
 
                 <div className="col-6 text-center">
-                  <h3 className=" pb-4">TOKENS GCP LOKED</h3>
+                  <h3 className=" ">TOKENS GCP LOKED</h3>
                   <h4> <img height="50px" src="assets/img/moneda.png" alt="gcp monton de monedas"></img> 1234.5678 GCP</h4>
 
      
                 </div>
 
               </div>
-              <div className="row justify-content-md-center">
+              <div style={{backgroundColor: "#461829", borderRadius: "30px"}}>
+              <div className="row justify-content-md-center mt-4 pt-5">
 
                 <div className="col-md-auto text-center">
-                  <h3 className=" pb-4">LOKED YOUR TOKENS GCP / 60 DAYS</h3>
+                  <h3 className=" ">LOKED YOUR TOKENS GCP / 60 DAYS</h3>
 
                   <input type="number" className="form-control" id="cantidadCSC" placeholder="Min. 60 GCP"/><br />
-                  <button className="btn btn-warning" onClick={()=> this.staking()}><b>Stake GCP</b></button>
+                  <div className="contenedor" onClick={() => this.staking()} style={{cursor:"pointer"}}>
+                    <div className="centrado content_div_boton" style={{width: "200px"}} >
+
+                      <img src="assets/img/moneda.png" alt="goal crypto boton" width="30px"/>
+                      {"  "}<b>Stake tokens GCP</b>
+                    </div>
+                  </div>
 
                 </div>
 
               </div>
-              <div className="row justify-content-md-center">
+              <div className="row justify-content-md-center mt-4">
 
                 <div className="col-md-auto text-center">
-                  <h3 className=" pb-4">YOUR REWARDS</h3>
+                  <h3 className=" ">YOUR REWARDS</h3>
                   <p>{this.state.staked} GCP {" "} {this.state.claim}</p>
                   
-
                  <button className="btn btn-warning" onClick={()=> this.staking()}><b>Claim GCP</b></button>
 
                 </div>
 
+              </div>
+
+              <div className="row justify-content-md-center mt-4">
+
+                <div className="col-md-auto text-center">
+                  <h3 className=" ">YOUR DEPOSITS</h3>
+                  
+                  <p>10 GCP <button className="btn btn-warming">Un-Stake</button></p>
+                  <p>20 GCP <button className="btn btn-success">Un-Stake</button></p>
+                  <p>40 GCP <button className="btn btn-warming">Un-Stake</button></p>
+
+
+                </div>
+
+              </div>
               </div>
 
             </div>

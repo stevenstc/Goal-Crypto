@@ -8,6 +8,14 @@
   padding: 5px;
 }
 
+.content_div_boton {
+  
+  border-radius: 50px;
+  border: 2px solid rgb(255, 255, 255);
+  background-color: rgb(223,21,96);
+  padding: 5px;
+}
+
 
 .contenedor{
     position: relative;
