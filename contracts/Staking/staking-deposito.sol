@@ -121,16 +121,19 @@ contract StakingPool is Context, Admin{
   }
 
   mapping(address => uint256[]) public deposito;
+  mapping(address => uint256[]) public tokenInterno;
   mapping(address => uint256[]) public fecha;
-  mapping(address => uint256[]) public retirado;
 
-
-  uint public MIN_DEPOSIT = 10 * 10**18;
+  uint public MIN_DEPOSIT = 84 * 10**18;
+  uint public MAX_DEPOSIT = 84000 * 10**18;
   uint public DISTRIBUTION_POOL = 2085000 * 10**18;
+  uint public TOTAL_STAKING;
   uint public TOTAL_PARTICIPACIONES;
   uint public PAYER_POOL_BALANCE;
   uint public inicio = 1636578000;
   uint public lastPay = 1636578000;
+
+  uint public duracion = 1*86400;
   
   uint public precision = 18;
 
@@ -138,38 +141,62 @@ contract StakingPool is Context, Admin{
 
   constructor() { }
 
+  function RATE() public view returns (uint){
+    if(TOTAL_PARTICIPACIONES == 0){
+      return 10**precision;
+    }else{
+      return (PAYER_POOL_BALANCE.mul(10**precision)).div(TOTAL_PARTICIPACIONES);
 
-  function CSC_PAY_BALANCE() public view returns (uint){
-    return address(this).balance;
+    }
   }
 
-  function ChangeToken(address _tokenTRC20) public onlyOwner returns (bool){
-
-    CSC_Contract = TRC20_Interface(_tokenTRC20);
-
-    return true;
-
-  }
-
-  function ChangeTokenOTRO(address _tokenTRC20) public onlyOwner returns (bool){
-
-    OTRO_Contract = TRC20_Interface(_tokenTRC20);
-
-    return true;
-
+  function compra(uint _value) public view returns(uint){
+      return (_value.mul(10**precision)).div(RATE());
   }
   
   function staking(uint _token) public  {
 
     if(block.timestamp < inicio )revert();
     if(_token < MIN_DEPOSIT)revert();
+    if(_token > MAX_DEPOSIT)revert();
+
     if( !CSC_Contract.transferFrom(msg.sender, address(this), _token) )revert();
+
+    tokenInterno[msg.sender].push(compra(_token));
+    TOTAL_PARTICIPACIONES += compra(_token);
+    PAYER_POOL_BALANCE += _token;
 
     fecha[msg.sender].push(block.timestamp);
     deposito[msg.sender].push(_token);
-    retirado[msg.sender].push(0);
 
-    TOTAL_PARTICIPACIONES += _token;
+    TOTAL_STAKING += _token;
+
+  }
+
+  function pago(uint _value) public view returns (uint256){
+    return (_value.mul(RATE())).div(10**precision);
+  }
+
+  function retiro(uint _deposito) public {
+
+    if(fecha[msg.sender][_deposito]+duracion > block.timestamp)revert();
+
+    uint pagare = pago(tokenInterno[msg.sender][_deposito]);
+    
+    if( !CSC_Contract.transfer(msg.sender, pagare) )revert();
+
+    TOTAL_PARTICIPACIONES -= tokenInterno[msg.sender][_deposito];
+    PAYER_POOL_BALANCE -= pagare;
+    TOTAL_STAKING -= deposito[msg.sender][_deposito];
+
+    tokenInterno[msg.sender][_deposito] = tokenInterno[msg.sender][tokenInterno[msg.sender].length - 1];
+    tokenInterno[msg.sender].pop();
+
+    deposito[msg.sender][_deposito] = deposito[msg.sender][deposito[msg.sender].length - 1];
+    deposito[msg.sender].pop();
+
+    fecha[msg.sender][_deposito] = fecha[msg.sender][fecha[msg.sender].length - 1];
+    fecha[msg.sender].pop();
 
   }
   
@@ -177,45 +204,30 @@ contract StakingPool is Context, Admin{
     return deposito[_user];
   }
 
-  function retiradoTotal(address _user) public view returns (uint){
-
-    uint _value = 0;
-    for (uint256 index = 0; index < deposito[_user].length; index++) {
-      _value += retirado[_user][index];
-      
-    }
-    return _value;
-  }
-  
-
-  function participacion(address _user) public view returns (uint [] memory){
-
-    uint[] memory userpo = depositoTotal(_user);
-
-    uint[] memory partcip = new uint[](userpo.length);
-
-    for (uint256 index = 0; index < userpo.length; index++) {
-      partcip[index] = (userpo[index].mul(10**precision)).div(TOTAL_PARTICIPACIONES*100) ;
-    }
-
-    return partcip;
-  }
-
   function pagarDividendos() public{
 
-    PAYER_POOL_BALANCE += DISTRIBUTION_POOL.mul(2).div(100);
+    uint pd = DISTRIBUTION_POOL.mul(2).div(100);
+    DISTRIBUTION_POOL -= pd;
+    PAYER_POOL_BALANCE += pd;
     lastPay = block.timestamp;
+
+  }
+
+  function recargarPool(uint _token) public{
+
+    if( !CSC_Contract.transferFrom(msg.sender, address(this), _token) )revert();
+    DISTRIBUTION_POOL += _token;
 
   }
 
   function dividendos(address _user) public view returns (uint[] memory){
 
-    uint[] memory userpart = participacion(_user);
+    uint[] memory userpart = tokenInterno[_user];
 
     uint[] memory totDiv = new uint[](userpart.length);
 
     for (uint256 index = 0; index < userpart.length; index++) {
-      totDiv[index] = (PAYER_POOL_BALANCE.mul(userpart[index])).div(10**precision) ;
+      totDiv[index] = userpart[index].sub(compra(deposito[_user][index]));
     }
 
     return totDiv;
@@ -234,49 +246,36 @@ contract StakingPool is Context, Admin{
     return totDiv;
   }
 
-  function totalDividendosAPagar(address _user) public view returns (uint){
-
-    uint[] memory userpart = dividendos(_user);
-
-    uint totDiv;
-
-    for (uint256 index = 0; index < userpart.length; index++) {
-      totDiv += userpart[index] ;
-    }
-
-    return (totDiv).sub(retiradoTotal(_user));
-  }
-
-
   function retiroDividendos(address _user) public {
 
-    if( !CSC_Contract.transfer(msg.sender, totalDividendosAPagar(_user) ))revert();
+    uint tokenIN = totalDividendos(_user);
+    uint tokenEX = pago(totalDividendos(_user));
+
+    if( !CSC_Contract.transfer(_user, tokenEX ))revert();
 
     for (uint256 index = 0; index < dividendos(_user).length; index++) {
-      retirado[_user][index] += dividendos(_user)[index];
+      tokenInterno[_user][index] -= dividendos(_user)[index];
     }
+
+    TOTAL_PARTICIPACIONES -= tokenIN;
+    PAYER_POOL_BALANCE -= tokenEX;
 
   }
 
-  function retiro(uint _deposito) public {
 
-    if(totalDividendosAPagar(msg.sender) > 0){
-      retiroDividendos(msg.sender);
-    }
-    if(fecha[msg.sender][_deposito]+1*86400 < block.timestamp)revert();
-    
-    if(TOTAL_PARTICIPACIONES < deposito[msg.sender][_deposito])revert();
-    if( !CSC_Contract.transfer(msg.sender, deposito[msg.sender][_deposito]) )revert();
-    TOTAL_PARTICIPACIONES -= deposito[msg.sender][_deposito];
+  function ChangeToken(address _tokenTRC20) public onlyOwner returns (bool){
 
-    deposito[msg.sender][_deposito] = deposito[msg.sender][deposito[msg.sender].length - 1];
-    deposito[msg.sender].pop();
+    CSC_Contract = TRC20_Interface(_tokenTRC20);
 
-    fecha[msg.sender][_deposito] = fecha[msg.sender][fecha[msg.sender].length - 1];
-    fecha[msg.sender].pop();
+    return true;
 
-    retirado[msg.sender][_deposito] = retirado[msg.sender][retirado[msg.sender].length - 1];
-    retirado[msg.sender].pop();
+  }
+
+  function ChangeTokenOTRO(address _tokenTRC20) public onlyOwner returns (bool){
+
+    OTRO_Contract = TRC20_Interface(_tokenTRC20);
+
+    return true;
 
   }
 
@@ -285,6 +284,17 @@ contract StakingPool is Context, Admin{
    
     return true;
   }
+
+  function updateMAXMIN(uint _min , uint _max) public onlyOwner {
+    MIN_DEPOSIT = _min;
+    MAX_DEPOSIT = _max;
+  }
+
+  function updateDuracion(uint _time) public onlyOwner {
+    duracion = _time;
+  }
+
+  
 
   function redimCSC(uint _value) public onlyOwner returns (uint) {
 

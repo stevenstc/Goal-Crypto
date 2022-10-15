@@ -15,6 +15,9 @@ export default class HomeStaking extends Component {
     this.staking = this.staking.bind(this);
     this.myStake = this.myStake.bind(this);
     this.retiro = this.retiro.bind(this);
+    this.retiroDiv = this.retiroDiv.bind(this);
+    this.payDiv = this.payDiv.bind(this);
+
 
   }
 
@@ -33,7 +36,7 @@ export default class HomeStaking extends Component {
 
 
     var bloqueado = await this.props.wallet.contractStaking.methods
-    .TOTAL_PARTICIPACIONES()
+    .TOTAL_STAKING()
     .call({ from: this.props.currentAccount });
     bloqueado = new BigNumber(bloqueado).shiftedBy(-18).decimalPlaces(6).toString(10)
 
@@ -81,20 +84,25 @@ export default class HomeStaking extends Component {
 
 
     if(balance >= parseInt(valor*10**18)){
-        if (aprovado > 0) {
-          if (Date.now() >= inicio*1000) {
-            await this.props.wallet.contractStaking.methods
-            .staking(amount)
-            .send({ from: this.props.currentAccount });
-          }else{
-            alert("It's not time");
-          }
-        }else{
-          await this.props.wallet.contractToken.methods
-          .approve(this.props.wallet.contractStaking._address, "115792089237316195423570985008687907853269984665640564039457584007913129639935")
-          .send({ from: this.props.currentAccount });
 
-        }
+      if (aprovado <= 0) {
+        await this.props.wallet.contractToken.methods
+        .approve(this.props.wallet.contractStaking._address, "115792089237316195423570985008687907853269984665640564039457584007913129639935")
+        .send({ from: this.props.currentAccount });
+
+      }
+
+      if (Date.now() >= inicio*1000) {
+        await this.props.wallet.contractStaking.methods
+        .staking(amount)
+        .send({ from: this.props.currentAccount });
+        alert("Staking is done");
+        document.getElementById("cantidadCSC").value = "";
+
+      }else{
+        alert("It's not time, please wait");
+      }
+        
       
     }else{
       alert("insuficient Founds");
@@ -104,11 +112,15 @@ export default class HomeStaking extends Component {
 
   async myStake() {
 
-    var dividendos = 0/*await this.props.wallet.contractStaking.methods
+    var dividendos = await this.props.wallet.contractStaking.methods
       .totalDividendos(this.props.currentAccount)
-      .call({ from: this.props.currentAccount });*/
+      .call({ from: this.props.currentAccount });
 
-    dividendos = new BigNumber(dividendos).shiftedBy(-18).toString(10)
+    dividendos = await this.props.wallet.contractStaking.methods
+    .pago(dividendos)
+    .call({ from: this.props.currentAccount });
+
+    dividendos = new BigNumber(dividendos).shiftedBy(-18).decimalPlaces(6).toString(10)
 
     var depositos = await this.props.wallet.contractStaking.methods
     .depositoTotal(this.props.currentAccount)
@@ -120,7 +132,7 @@ export default class HomeStaking extends Component {
       var valor = new BigNumber(depositos[index]).shiftedBy(-18).decimalPlaces(6).toString(10)
       listaDepositos[index] = (<div key={"cosal"+index}>
       
-        <p>{valor} GCP <button className="btn btn-success">Un-Stake</button></p>
+        <p>{valor} GCP <button className="btn btn-success" onClick={()=>{this.retiro(index)}}>Un-Stake</button></p>
       
       </div>);
       
@@ -133,14 +145,28 @@ export default class HomeStaking extends Component {
     
   }
 
-  async retiro() {
 
-    var usuario = await this.props.wallet.contractStaking.methods
-      .usuarios(this.props.currentAccount)
-      .call({ from: this.props.currentAccount });
+  async retiroDiv() {
 
     await this.props.wallet.contractStaking.methods
-      .retiro(usuario)
+      .retiroDividendos(this.props.currentAccount)
+      .send({ from: this.props.currentAccount })
+
+  }
+
+  
+  async retiro(id) {
+
+    await this.props.wallet.contractStaking.methods
+      .retiro(id)
+      .send({ from: this.props.currentAccount })
+
+  }
+
+  async payDiv() {
+
+    await this.props.wallet.contractStaking.methods
+      .pagarDividendos()
       .send({ from: this.props.currentAccount })
 
   }
@@ -164,7 +190,7 @@ export default class HomeStaking extends Component {
               <div className="row justify-content-md-center">
 
 
-                <div className="col-6 text-center">
+                <div className="col-6 text-center" onClick={()=>{this.payDiv()}}>
                   <h3 className=" ">POOL STAKING</h3>
                   <h4> <img height="50px" src="assets/img/monton-monedas.png" alt="gcp monton de monedas"></img> {this.state.pool} GCP</h4>
      
@@ -202,7 +228,7 @@ export default class HomeStaking extends Component {
                   <h3 className=" ">YOUR REWARDS</h3>
                   <p>{this.state.staked} GCP</p>
                   
-                 <button className="btn btn-warning" onClick={()=> this.staking()}><b>Claim GCP</b></button>
+                 <button className="btn btn-warning" onClick={()=> this.retiroDiv()}><b>Claim GCP</b></button>
 
                 </div>
 
