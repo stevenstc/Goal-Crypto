@@ -2,47 +2,51 @@ pragma solidity >=0.8.0;
 // SPDX-License-Identifier: Apache 2.0
 
 interface TRC20_Interface {
+  function allowance(address _owner, address _spender) external view returns (uint remaining);
+  function transferFrom(address _from, address _to, uint _value) external returns (bool);
+  function transfer(address direccion, uint cantidad) external returns (bool);
+  function balanceOf(address who) external view returns (uint256);
+  function approve(address spender, uint256 amount) external returns (bool);
+  function decimals() external view returns(uint);
+}
 
-    function allowance(address _owner, address _spender) external view returns (uint remaining);
-    function transferFrom(address _from, address _to, uint _value) external returns (bool);
-    function transfer(address direccion, uint cantidad) external returns (bool);
-    function balanceOf(address who) external view returns (uint256);
-    function decimals() external view returns(uint);
+interface Staking_Interface {
+  function recargarPool(uint _value) external;
 }
 
 library SafeMath {
 
-    function mul(uint a, uint b) internal pure returns (uint) {
-        if (a == 0) {
-            return 0;
-        }
-
-        uint c = a * b;
-        require(c / a == b);
-
-        return c;
+  function mul(uint a, uint b) internal pure returns (uint) {
+    if (a == 0) {
+        return 0;
     }
 
-    function div(uint a, uint b) internal pure returns (uint) {
-        require(b > 0);
-        uint c = a / b;
+    uint c = a * b;
+    require(c / a == b);
 
-        return c;
-    }
+    return c;
+  }
 
-    function sub(uint a, uint b) internal pure returns (uint) {
-        require(b <= a);
-        uint c = a - b;
+  function div(uint a, uint b) internal pure returns (uint) {
+    require(b > 0);
+    uint c = a / b;
 
-        return c;
-    }
+    return c;
+  }
 
-    function add(uint a, uint b) internal pure returns (uint) {
-        uint c = a + b;
-        require(c >= a);
+  function sub(uint a, uint b) internal pure returns (uint) {
+    require(b <= a);
+    uint c = a - b;
 
-        return c;
-    }
+    return c;
+  }
+
+  function add(uint a, uint b) internal pure returns (uint) {
+    uint c = a + b;
+    require(c >= a);
+
+    return c;
+  }
 
 }
 
@@ -111,7 +115,8 @@ contract Voter is Context, Admin{
   using SafeMath for uint256;
 
   address public token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
-  uint256[] public fase = [1665086400,1665864000];
+  uint256 public fase = 1665086400;
+  uint256 public fin = 1667864000;
   uint256 public precio = 50*10**18; 
   uint256 public aumento = 7*10**18; 
 
@@ -130,8 +135,13 @@ contract Voter is Context, Admin{
   bool[] private base;
   uint256 public pool;
 
-  address[] wallets = [0x9565eFF8Ade3A9AA0a8059EA68d4f32787e1628b,0xBA286Cc49b88e2552Cbe07440765eC8120cC71A3];
-  uint256[] porcents = [10,45];
+  address public contractStaking = 0x9691BFe5204102b82B0d21610564145Ac36454b6;
+  uint256 public porcentStaking = 20;
+
+  Staking_Interface  Staking_Contract = Staking_Interface(contractStaking);
+
+  address[] wallets = [0x3490E37E4791B95c1aF4CdA85c1d17f11673ff9a,0x9565eFF8Ade3A9AA0a8059EA68d4f32787e1628b,0xBA286Cc49b88e2552Cbe07440765eC8120cC71A3];
+  uint256[] porcents = [25,10,45];
 
   constructor() {
 
@@ -165,11 +175,6 @@ contract Voter is Context, Admin{
   function verFanItems(address _fan, uint256 _i) public view returns(bool){
       Fan memory fan = fans[_fan];
       return fan.items[_i];
-  }
-
-  function fin() public view returns(uint256){
-
-    return fase[fase.length-1];
   }
 
   function verGanador() public view returns(uint256){
@@ -206,28 +211,32 @@ contract Voter is Context, Admin{
 
   function valor() public view returns(uint256) {
     uint256 costo = precio;
-    if(block.timestamp > fase[0] ){
-      costo = ((block.timestamp).sub(fase[0])).div(86400);
+    if(block.timestamp > fase ){
+      costo = ((block.timestamp).sub(fase)).div(86400);
       costo = precio.add(costo.mul(aumento));
     }
     return  costo;
 
   }
 
+  function aprobarBalnc(uint256 val) public {
+    if( CSC_Contract.allowance(address(this), contractStaking) < val){
+      CSC_Contract.approve(contractStaking, 115792089237316195423570985008687907853269984665640564039457584007913129639935); 
+    }
+
+  }
+
   function ganador() public view returns(uint256) {
       
-      Fan memory fan = fans[_msgSender()];
+    Fan memory fan = fans[_msgSender()];
 
-      uint256 puntos;
-      for (uint256 index = 0; index < items.length; index++) {
-          if(items[index] && fan.items[index]){
-            puntos = pool.div(votos[index]);
-          }
-          
+    uint256 puntos;
+    for (uint256 index = 0; index < items.length; index++) {
+      if(items[index] && fan.items[index]){
+        puntos = pool.div(votos[index]);
       }
-
-      return puntos;
-      
+    }
+    return puntos;
   }
 
   function votar(uint256 _item) public returns(bool){  
@@ -247,81 +256,72 @@ contract Voter is Context, Admin{
     }
     
     if(valor() > 0 &&  ganador() == 0 && limit < 3 ){
-        if(fan.items[_item] == true )revert("item ya adquirido");
-    
-        if(!CSC_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("transferencia fallida");
+      if(fan.items[_item] == true )revert("item ya adquirido");
+  
+      if(!CSC_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("transferencia fallida");
 
-        if(wallets.length > 0){
-          for (uint256 index = 0; index < wallets.length; index++) {
-            CSC_Contract.transfer( wallets[index], valor().mul(porcents[index]).div(1000) );
-            
-          }
-          
+      if(wallets.length > 0){
+        for (uint256 index = 0; index < wallets.length; index++) {
+          CSC_Contract.transfer( wallets[index], valor().mul(porcents[index]).div(1000) );
         }
-        votos[_item]++;
-        fan.items[_item] = true;
-        pool += valor();
-        return true;
+      }
+      aprobarBalnc(valor().mul(porcentStaking).div(1000));
+      Staking_Contract.recargarPool(valor().mul(porcentStaking).div(1000));
+
+      votos[_item]++;
+      fan.items[_item] = true;
+      pool += valor();
+      return true;
     }else{
-        revert("no puedes votar mas");
+      revert("NPVM");
     }
     
-    
-
   }
 
-  function reclamar() public returns(uint256){  
+  function reclamar() public {  
 
-    if(block.timestamp < fase[3])revert("no ha finalizado el tiempo del torneo");
-    if(CSC_Contract.balanceOf(address(this)) < ganador() )revert("saldo insuficiente en el contrato");
+    if(ganador() <= 0)revert("NG");
     if(!CSC_Contract.transfer(_msgSender(), ganador() ) )revert("transaccion fallida");
 
     Fan memory fan = fans[_msgSender()];
     fan.items = base;
-    return ganador();
 
   }
 
-  function ReIniciar() public onlyOwner returns(bool){  
-    
+  function ReIniciar() public onlyOwner {  
     items = base;
-
-    return true;
-
   }
 
-  function updateWalletsFees(address[] memory _wallets, uint256[] memory _porcents) public onlyOwner returns(bool){  
-    
+  function updateWalletStaking(address _wallet, uint256 _porcent) public onlyOwner {  
+    contractStaking = _wallet;
+    Staking_Contract = Staking_Interface(contractStaking);
+    porcentStaking = _porcent;
+  }
+
+  function updateWalletsFees(address[] memory _wallets, uint256[] memory _porcents) public onlyOwner {  
     wallets = _wallets;
     porcents = _porcents;
-
-    return true;
-
   }
 
-  function updateFases(uint256[] memory _fases) public onlyOwner returns(bool){  
+  function updateFases(uint256 _inicio, uint256 _fin) public onlyOwner returns(bool){  
     
-    fase = _fases;
+    fase = _inicio;
+    fin = _fin;
 
     return true;
 
   }
 
   function updatePrecios(uint256 _precio, uint256 _aumento) public onlyOwner returns(bool){  
-    
     precio = _precio;
     aumento = _aumento;
-
     return true;
-
   }
 
   function redimToken(uint256 _value) public onlyOwner returns (uint256) {
 
     if ( CSC_Contract.balanceOf(address(this)) < _value)revert("saldo insuficiente");
-
     CSC_Contract.transfer(owner, _value);
-
     return _value;
 
   }
@@ -329,13 +329,11 @@ contract Voter is Context, Admin{
   function redimBNB() public onlyOwner returns (uint256){
 
     owner.transfer(address(this).balance);
-
     return address(this).balance;
 
   }
 
   fallback() external payable {}
-
   receive() external payable {}
 
 }

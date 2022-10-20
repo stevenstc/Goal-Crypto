@@ -28,8 +28,8 @@ if(TESTNET){
     tokenUSDT = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc";// usdt de pruebas
     TOKEN = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"; //token de pruebas
     SC = "0xCB553b2128fAb586E8C6601983cdb134eaBdd989";//"0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";// contrato test market
-    SC2 = "0xF5bADF480929494c83d489D15b7807604E37616B";// contrado test votacion
-    SC3 = "0xB55D2e83376C55dBF62cc2acE7403cecC7DeF69a";// contrado test Staking
+    SC2 = "0x928d8b426f5657FF85947D30A91767bc69bd721D";// contrado test votacion fan
+    SC3 = "0x9691BFe5204102b82B0d21610564145Ac36454b6";// contrado test Staking-pool
     SC5 = "0xEeAB65c0e3076985E2aDBd8119D8e5B4784185c5"; // Inventario
     SC6 = "0x082621b836f5212731Ea2c6849f4D91813169B72"; // Exchange
     chainId = '0x61';

@@ -130,9 +130,32 @@ export default class HomeStaking extends Component {
     var listaDepositos = [];
     for (let index = 0; index < depositos.length; index++) {
       var valor = new BigNumber(depositos[index]).shiftedBy(-18).decimalPlaces(6).toString(10)
+
+      var fecha = await this.props.wallet.contractStaking.methods
+      .fecha(this.props.currentAccount,index)
+      .call({ from: this.props.currentAccount });
+      fecha = fecha*1000;
+      var actual = Date.now()
+      var bot = "success"
+      var func = ()=>{this.retiro(index)};
+      if(fecha > actual){
+        bot = "secondary";
+        func = ()=>{alert("please wait to: \n"+new Date(fecha))};
+
+      }else{
+        bot = "success";
+        func = ()=>{this.retiro(index)};
+
+      }
+
+      fecha = new Date(fecha);
+
+      var fecha2 = "Unavailable until: "+fecha.getDate()+"/"+(1+fecha.getMonth())+"/"+fecha.getFullYear()
+      
+
       listaDepositos[index] = (<div key={"cosal"+index}>
       
-        <p>{valor} GCP <button className="btn btn-success" onClick={()=>{this.retiro(index)}}>Un-Stake</button></p>
+        <p>{valor} GCP <button className={"btn btn-"+bot} title={fecha2} onClick={func}>Un-Stake</button></p>
       
       </div>);
       
