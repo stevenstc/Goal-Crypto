@@ -121,13 +121,8 @@ contract Match is Context, Admin{
   uint256 public aumento; 
 
   TRC20_Interface CSC_Contract = TRC20_Interface(token);
-  
-  struct Fan {
-    bool registrado;
-    bool[] items;
-  }
 
-  mapping (address => Fan) public fans;
+  mapping (address => bool[]) public fans;
 
   bool[] public items;
   uint256[] public votos;
@@ -152,14 +147,7 @@ contract Match is Context, Admin{
 
     base = items;
       
-      Fan memory fan;
-      fan=Fan({
-        registrado:true,
-        items: base
-          
-      });
-      
-    fans[_msgSender()] = fan;
+    fans[_msgSender()] = base;
 
   }
   
@@ -167,14 +155,12 @@ contract Match is Context, Admin{
       return items.length;
   }
   
-  function largoFanItems(address _fan) public view returns(uint256){
-      Fan memory fan = fans[_fan];
-      return fan.items.length;
+  function largoFanItems(address _user) public view returns(uint256){
+      return fans[_user].length;
   }
   
-  function verFanItems(address _fan, uint256 _i) public view returns(bool){
-      Fan memory fan = fans[_fan];
-      return fan.items[_i];
+  function verFanItems(address _user, uint256 _i) public view returns(bool){
+      return fans[_user][_i];
   }
 
   function verGanador() public view returns(uint256){
@@ -232,11 +218,9 @@ contract Match is Context, Admin{
 
   function ganador() public view returns(uint256) {
       
-    Fan memory fan = fans[_msgSender()];
-
     uint256 puntos;
-    for (uint256 index = 0; index < items.length; index++) {
-      if(items[index] && fan.items[index]){
+    for (uint256 index = 0; index < fans[_msgSender()].length; index++) {
+      if(items[index] && fans[_msgSender()][index]){
         puntos = pool.div(votos[index]);
       }
     }
@@ -246,8 +230,8 @@ contract Match is Context, Admin{
   function limit(address _user) internal view returns(uint256){
     uint256 limite = 0;
 
-    for (uint256 index = 0; index < fans[_user].items.length; index++) {
-      if(fans[_user].items[index])limite++;
+    for (uint256 index = 0; index < fans[_user].length; index++) {
+      if(fans[_user][index])limite++;
     }
 
     return limite;
@@ -259,13 +243,12 @@ contract Match is Context, Admin{
     if(block.timestamp < fase)revert("NSTRT");
 
       
-    if(fans[_msgSender()].items.length != base.length){
-      fans[_msgSender()].registrado=true;
-      fans[_msgSender()].items= base;  
+    if(fans[_msgSender()].length != base.length){
+      fans[_msgSender()] = base;  
     }
 
     if(valor() > 0 &&  ganador() == 0 && limit(_msgSender()) < 1 ){
-      if(fans[_msgSender()].items[_item] == true )revert("item ya adquirido");
+      if(fans[_msgSender()][_item] == true )revert("item ya adquirido");
   
       if(!CSC_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("transferencia fallida");
 
@@ -278,7 +261,7 @@ contract Match is Context, Admin{
       Staking_Contract.recargarPool(valor().mul(porcentStaking).div(1000));
 
       votos[_item]++;
-      fans[_msgSender()].items[_item] = true;
+      fans[_msgSender()][_item] = true;
       pool += (valor()).mul(90).div(100);
       return true;
     }else{
@@ -292,7 +275,7 @@ contract Match is Context, Admin{
     if(ganador() <= 0)revert("NG");
     if(!CSC_Contract.transfer(_msgSender(), ganador() ) )revert("transaccion fallida");
 
-    fans[_msgSender()].items = base;
+    fans[_msgSender()] = base;
 
   }
 
