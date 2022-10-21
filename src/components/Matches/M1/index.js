@@ -278,7 +278,7 @@ export default class HomeFan extends Component {
       <>
 
         <header className="masthead text-center text-white">
-          <h2>Match #1 | Pooled {this.state.balanceContract} GCP</h2>
+          <h2>Match #1 | Pool {this.state.balanceContract} GCP</h2>
           <div className="masthead-content" class="bg-image"
                 style={{ backgroundImage: "url('images/fondo.png')", backgroundSize: "100%", backgroundPosition: "center",backgroundRepeat: "no-repeat"}}>
             <div className="container px-5">

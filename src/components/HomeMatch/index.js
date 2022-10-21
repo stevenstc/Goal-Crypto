@@ -39,7 +39,7 @@ export default class HomeFan extends Component {
     return (
       <>
 
-        <img className="img-fluid" src="images/hero_bg_4.png"></img>
+        <img className="img-fluid" src="images/pvotacion.png"></img>
 
         <header className="masthead text-center text-white">
           <div className="masthead-content">

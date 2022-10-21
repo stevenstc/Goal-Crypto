@@ -241,26 +241,28 @@ contract Voter is Context, Admin{
     return puntos;
   }
 
+  function limit(address _user) internal view returns(uint256){
+    uint256 limite = 0;
+
+    for (uint256 index = 0; index < fans[_user].items.length; index++) {
+      if(fans[_user].items[index])limite++;
+    }
+
+    return limite;
+  }
+
   function votar(uint256 _item) public returns(bool){  
 
     if(block.timestamp >= fin)revert("END");
-      
-    Fan storage fan = fans[_msgSender()];
-
-    if(fan.items.length != base.length){
-      fan.registrado=true;
-      fan.items= base;
-          
-    }
-
-    uint256 limit = 0;
-
-    for (uint256 index = 0; index < fan.items.length; index++) {
-      if(fan.items[index])limit++;
-    }
+    if(block.timestamp < fase)revert("NSTRT");
     
-    if(valor() > 0 &&  ganador() == 0 && limit < 3 ){
-      if(fan.items[_item] == true )revert("item ya adquirido");
+    if(fans[_msgSender()].items.length != base.length){
+      fans[_msgSender()].registrado = true;
+      fans[_msgSender()].items = base;
+    }
+
+    if(valor() > 0 &&  ganador() == 0 && limit(_msgSender()) < 3 ){
+      if(fans[_msgSender()].items[_item] == true )revert("item ya adquirido");
   
       if(!CSC_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("transferencia fallida");
 
@@ -273,7 +275,7 @@ contract Voter is Context, Admin{
       Staking_Contract.recargarPool(valor().mul(porcentStaking).div(1000));
 
       votos[_item]++;
-      fan.items[_item] = true;
+      fans[_msgSender()].items[_item] = true;
       pool += (valor()).mul(90).div(100);
       return true;
     }else{
@@ -287,8 +289,7 @@ contract Voter is Context, Admin{
     if(ganador() <= 0)revert("NG");
     if(!CSC_Contract.transfer(_msgSender(), ganador() ) )revert("transaccion fallida");
 
-    Fan memory fan = fans[_msgSender()];
-    fan.items = base;
+    fans[_msgSender()].items = base;
 
   }
 
