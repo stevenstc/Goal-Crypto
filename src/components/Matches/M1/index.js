@@ -114,8 +114,6 @@ export default class HomeFan extends Component {
       alert("insuficient Founds")
     }
 
-    
-
   }
 
   async items() {
@@ -134,19 +132,6 @@ export default class HomeFan extends Component {
       .fin()
       .call({ from: this.props.currentAccount });
     fin = fin*1000;
-
-    
-
-      //{filter:"grayscale(100%)"}
-
-      /*
-      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
-      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
-      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
-      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
-      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
-      {filter:"grayscale(100%)"}
-       */
 
     var eliminated = [
       {},{},{},
@@ -184,7 +169,7 @@ export default class HomeFan extends Component {
 
       if(Date.now() > fin){
         valor = "Finished";
-        //eliminated = filterElimitaded;
+        eliminated = filterElimitaded;
       }
 
       if(Date.now() < inicio){
@@ -192,7 +177,7 @@ export default class HomeFan extends Component {
       }
 
       if(eliminated[index].filter){
-        valor = "Eliminated";
+        //valor = "Eliminated";
       }
 
       var votos = await this.props.wallet.contractMatch1.methods
@@ -203,7 +188,7 @@ export default class HomeFan extends Component {
         var nameTeams = ["Qatar","Empate","Ecuador"]
 
       itemsYoutube[index] = (
-          <div className="col-sm-4 p-3 mb-5 text-center monedas position-relative" key={`items-${index}`}>
+          <div className="col-sm-4 p-3 mb-5 text-center monedas position-relative"  key={`items-${index}`}>
             
             <img
               className=" pb-2"
@@ -232,6 +217,8 @@ export default class HomeFan extends Component {
 
     this.setState({
       itemsYoutube: itemsYoutube,
+      inicio: (new Date(inicio)).toString(),
+      fin: (new Date(fin)).toString()
     });
   }
 
@@ -283,7 +270,7 @@ export default class HomeFan extends Component {
 
       if (invent) {
         myInventario[index] = (
-            <div className="col-sm-4 p-4 mb-5 text-center monedas" key={`items-${index}`}>
+            <div className="col-sm-4 p-4 mb-5 text-center monedas" style={{ border: "1px", borderStyle: "solid", borderRadius: "15px", borderColor: "white", backgroundColor: "#6c757d"}} key={`items-${index}`}>
               <h2 className=" pb-4">{nameTeams[index]}</h2>
               <p>{votos} global votes</p>
               <img
@@ -316,6 +303,11 @@ export default class HomeFan extends Component {
               <div className="row justify-content-md-center">
                 {this.state.itemsYoutube}
               </div>
+              <div className="row justify-content-md-center">
+                <div className="col-12">
+                  Start: {this.state.inicio} | End: {this.state.fin}
+                </div>
+              </div>
             </div>
           </div>
         </header>
@@ -324,21 +316,17 @@ export default class HomeFan extends Component {
          
           <div style={{ marginTop: "30px" }} className="row text-center">
             <div className="col-md-12">
-              <h3>Account Votes</h3>{" "}
-              <button
-                className="btn btn-primary"
-                onClick={() => this.myItems()}
-              >
-                {" "}
-                refresh
-              </button>
+              <h3>Votes to Match #1</h3>{" "}
+              <hr color="white"></hr>
             </div>
           </div>
 
           <div className="row text-center" id="inventory">
             {this.state.myInventario}
           </div>
+          <hr color="white"></hr>
         </div>
+        
       </>
     );
   }
