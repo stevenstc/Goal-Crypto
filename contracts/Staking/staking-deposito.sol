@@ -155,9 +155,7 @@ contract StakingPool is Context, Admin{
 
     if(block.timestamp < inicio )revert();
     if(_token < MIN_DEPOSIT)revert();
-    if(_token > MAX_DEPOSIT)revert();
-    if(_token > MAX_DEPOSIT)revert();
-
+    if(depositoTotalToken(msg.sender)+_token > MAX_DEPOSIT)revert();
 
     if( !CSC_Contract.transferFrom(msg.sender, address(this), _token) )revert();
 

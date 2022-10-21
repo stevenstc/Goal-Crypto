@@ -18,6 +18,8 @@ export default class HomeStaking extends Component {
     this.retiroDiv = this.retiroDiv.bind(this);
     this.payDiv = this.payDiv.bind(this);
 
+    this.addStaking = this.addStaking.bind(this);
+
 
   }
 
@@ -101,6 +103,55 @@ export default class HomeStaking extends Component {
 
       }else{
         alert("It's not time, please wait");
+      }
+        
+      
+    }else{
+      alert("insuficient Founds");
+    }
+
+  }
+
+  async addStaking() {
+
+    var aprovado = await this.props.wallet.contractToken.methods
+      .allowance(this.props.currentAccount, this.props.wallet.contractStaking._address)
+      .call({ from: this.props.currentAccount });
+
+    var balance = await this.props.wallet.contractToken.methods
+      .balanceOf(this.props.currentAccount)
+      .call({ from: this.props.currentAccount });
+
+    var valor = prompt("tokens","1000");
+
+    var amount = (valor*10**18).toString(10);
+
+    function replaceAll( text, busca, reemplaza ){
+      while (text.toString().indexOf(busca) !== -1)
+          text = text.toString().replace(busca,reemplaza);
+      return text;
+    }
+
+    amount = await replaceAll(amount, ".", "" );
+    amount = await replaceAll(amount, ",", "" );
+
+    console.log(amount);
+
+    if(balance >= parseInt(valor*10**18)){
+
+      if (aprovado <= 0) {
+        await this.props.wallet.contractToken.methods
+        .approve(this.props.wallet.contractStaking._address, "115792089237316195423570985008687907853269984665640564039457584007913129639935")
+        .send({ from: this.props.currentAccount });
+
+      }
+
+      if (this.props.currentAccount === this.props.currentAccount+"") {
+        await this.props.wallet.contractStaking.methods
+        .recargarPool(amount)
+        .send({ from: this.props.currentAccount });
+        alert("send tokens to pool is done");
+
       }
         
       
@@ -197,7 +248,7 @@ export default class HomeStaking extends Component {
   render() {
     return (
       <>
-        <img className="img-fluid" src="assets/img/banner stake.png" ></img>
+        <img className="img-fluid" src="assets/img/banner stake.png" alt="" ></img>
         <header className="masthead text-center text-white">
           <div className="masthead-content">
             <div className="container px-5">
@@ -301,7 +352,7 @@ export default class HomeStaking extends Component {
           <div className="row text-center">
             <div className="col-md-12">
               <span>
-                Current balance: {this.state.balance}
+                Current balance: {this.state.balance} {" "}
                 <button
                   className="btn btn-primary"
                   onClick={async () => this.balance()}
@@ -313,6 +364,7 @@ export default class HomeStaking extends Component {
           </div>
          
         </div>
+        <span onClick={()=>{this.addStaking()}}>GCP</span>
       </>
     );
   }

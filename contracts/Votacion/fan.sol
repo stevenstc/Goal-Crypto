@@ -115,8 +115,8 @@ contract Voter is Context, Admin{
   using SafeMath for uint256;
 
   address public token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
-  uint256 public fase = 1665086400;
-  uint256 public fin = 1667864000;
+  uint256 public fase = 1667937600;
+  uint256 public fin = 1670011200;
   uint256 public precio = 50*10**18; 
   uint256 public aumento = 7*10**18; 
 
@@ -211,9 +211,11 @@ contract Voter is Context, Admin{
 
   function valor() public view returns(uint256) {
     uint256 costo = precio;
-    if(block.timestamp > fase ){
-      costo = ((block.timestamp).sub(fase)).div(86400);
-      costo = precio.add(costo.mul(aumento));
+    if(aumento != 0){
+      if(block.timestamp > fase ){
+        costo = ((block.timestamp).sub(fase)).div(86400);
+        costo = precio.add(costo.mul(aumento));
+      }
     }
     return  costo;
 
@@ -240,6 +242,8 @@ contract Voter is Context, Admin{
   }
 
   function votar(uint256 _item) public returns(bool){  
+
+    if(block.timestamp >= fin)revert("END");
       
     Fan storage fan = fans[_msgSender()];
 

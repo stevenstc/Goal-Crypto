@@ -5,7 +5,8 @@ import Web3 from "web3";
 import Home from "../V1Home";
 import Market from "../Market";
 import MarketV2 from "../MarketV2";
-import Fan from "../HomeFan";
+import Fan from "../HomeMundial";
+import Fan2 from "../HomeMatch";
 import Staking from "../HomeStaking"
 import TronLinkGuide from "../TronLinkGuide";
 import cons from "../../cons"
@@ -144,6 +145,16 @@ class App extends Component {
           cons.SC6
         )
 
+        var contractMatch1 = new web3.eth.Contract(
+          abiFan,
+          cons.MC1
+        );
+
+        var contractMatch2 = new web3.eth.Contract(
+          abiFan,
+          cons.MC2
+        );
+
         var loc = document.location.href;
         var walletconsulta = "0x0000000000000000000000000000000000000000"
 
@@ -167,7 +178,9 @@ class App extends Component {
             contractStaking: contractStaking,
             contractFaucet: contractFaucet,
             contractInventario: contractInventario,
-            contractExchange: contractExchange
+            contractExchange: contractExchange,
+            contractMatch1: contractMatch1,
+            contractMatch2: contractMatch2
           }
         })
   
@@ -207,6 +220,9 @@ class App extends Component {
           case "mundial":
           case "mundial-vote": 
             return(<Fan wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
+          case "match":
+          case "match-vote": 
+            return(<Fan2 wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
           case "staking":
             return(<Staking wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
           case "market":
