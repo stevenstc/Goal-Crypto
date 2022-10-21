@@ -145,7 +145,7 @@ contract Match is Context, Admin{
 
   constructor() {
 
-    for (uint256 index = 0; index < 2; index++) {
+    for (uint256 index = 0; index < 3; index++) {
       items.push(false);
       votos.push(0);
     }

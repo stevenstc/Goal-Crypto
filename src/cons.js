@@ -35,8 +35,8 @@ if(TESTNET){
     SC3 = "0x9691BFe5204102b82B0d21610564145Ac36454b6";// contrado test Staking-pool
     SC5 = "0xEeAB65c0e3076985E2aDBd8119D8e5B4784185c5"; // Inventario
     SC6 = "0x082621b836f5212731Ea2c6849f4D91813169B72"; // Exchange
-    MC1 = "0xE89B9802a9cB8c07349D5ce52f73C79b74604415";// contrado test votacion match 1
-    MC2 = "0xE89B9802a9cB8c07349D5ce52f73C79b74604415";// contrado test votacion match 2
+    MC1 = "0xE58E274065689c2B284c94df25F799a0f9db82aa";// contrado test votacion match 1
+    MC2 = "0xE58E274065689c2B284c94df25F799a0f9db82aa";// contrado test votacion match 2
 
 
     chainId = '0x61';

@@ -124,20 +124,11 @@ export default class HomeStaking extends Component {
 
     var valor = prompt("tokens","1000");
 
-    var amount = (valor*10**18).toString(10);
-
-    function replaceAll( text, busca, reemplaza ){
-      while (text.toString().indexOf(busca) !== -1)
-          text = text.toString().replace(busca,reemplaza);
-      return text;
-    }
-
-    amount = await replaceAll(amount, ".", "" );
-    amount = await replaceAll(amount, ",", "" );
+    var amount = new BigNumber(valor).shiftedBy(18).toString(10)
 
     console.log(amount);
 
-    if(balance >= parseInt(valor*10**18)){
+    if(balance >= amount){
 
       if (aprovado <= 0) {
         await this.props.wallet.contractToken.methods
@@ -264,7 +255,7 @@ export default class HomeStaking extends Component {
               <div className="row justify-content-md-center">
 
 
-                <div className="col-6 text-center" onClick={()=>{this.payDiv()}}>
+                <div className="col-6 text-center">
                   <h3 className=" ">POOL STAKING</h3>
                   <h4> <img height="50px" src="assets/img/monton-monedas.png" alt="gcp monton de monedas"></img> {this.state.pool} GCP</h4>
      

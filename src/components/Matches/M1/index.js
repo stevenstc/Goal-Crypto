@@ -168,12 +168,12 @@ export default class HomeFan extends Component {
         .votos(index)
         .call({ from: this.props.currentAccount });
 
-      var imageTeams = ["Ecuador.png","qatar.png"]
-      var nameTeams = ["Ecuador","Qatar"]
+        var imageTeams = ["qatar.png","Empate.png","Ecuador.png"]
+        var nameTeams = ["Qatar","Empate","Ecuador"]
 
       itemsYoutube[index] = (
-          <div className="col-sm-6 p-3 mb-5 text-center monedas position-relative" key={`items-${index}`}>
-            <h2 className=" pb-2">{nameTeams[index]}</h2>
+          <div className="col-sm-4 p-3 mb-5 text-center monedas position-relative" key={`items-${index}`}>
+            
             <img
               className=" pb-2"
               src={"images/"+imageTeams[index]}
@@ -181,7 +181,7 @@ export default class HomeFan extends Component {
               width="100%"
               alt="equipo del mundial"
             />
-
+            <h2 className=" pb-2">{nameTeams[index]}</h2>
             <h2 className="centradoFan">
               <b>{votos} votes</b>
             </h2>
@@ -230,7 +230,7 @@ export default class HomeFan extends Component {
 
       var claim = (<></>);
 
-      if(verGanador != largo){
+      if(verGanador !== largo){
 
         if (verGanador === index+""){
 
@@ -248,8 +248,8 @@ export default class HomeFan extends Component {
 
       }
 
-      var imageTeams = ["Ecuador.png","qatar.png"]
-      var nameTeams = ["Ecuador","Qatar"]
+      var imageTeams = ["qatar.png","Empate.png","Ecuador.png"]
+      var nameTeams = ["Qatar","Empate","Ecuador"]
 
       if (invent) {
         myInventario[index] = (
