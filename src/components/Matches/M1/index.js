@@ -186,7 +186,6 @@ export default class HomeFan extends Component {
               <b>{votos} votes</b>
             </h2>
 
-
             <div className="contenedor" onClick={() => this.votar(index)} style={{cursor:"pointer"}}>
               <div className="centrado" id="content_div_one_photo">
                 <img src="assets/img/moneda.png" alt="goal crypto boton" width="30px"/>
@@ -253,7 +252,7 @@ export default class HomeFan extends Component {
 
       if (invent) {
         myInventario[index] = (
-            <div className="col-sm-6 p-4 mb-5 text-center monedas" key={`items-${index}`}>
+            <div className="col-sm-4 p-4 mb-5 text-center monedas" key={`items-${index}`}>
               <h2 className=" pb-4">{nameTeams[index]}</h2>
               <p>{votos} global votes</p>
               <img
@@ -279,7 +278,7 @@ export default class HomeFan extends Component {
       <>
 
         <header className="masthead text-center text-white">
-          <h2>Match #1</h2>
+          <h2>Match #1 | Pooled {this.state.balanceContract} GCP</h2>
           <div className="masthead-content" class="bg-image"
                 style={{ backgroundImage: "url('images/fondo.png')", backgroundSize: "100%", backgroundPosition: "center",backgroundRepeat: "no-repeat"}}>
             <div className="container px-5">

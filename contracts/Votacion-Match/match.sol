@@ -276,7 +276,7 @@ contract Match is Context, Admin{
 
       votos[_item]++;
       fan.items[_item] = true;
-      pool += valor();
+      pool += (valor()).mul(90).div(100);
       return true;
     }else{
       revert("NPVM");
