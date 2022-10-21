@@ -32,7 +32,7 @@ if(TESTNET){
     TOKEN = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"; //token de pruebas
     SC = "0xCB553b2128fAb586E8C6601983cdb134eaBdd989";//"0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";// contrato test market
     SC2 = "0x0C4dDC36273ADBb967C78D3Ee0e7ea79200f1a30";// contrado test votacion fan
-    SC3 = "0x9691BFe5204102b82B0d21610564145Ac36454b6";// contrado test Staking-pool
+    SC3 = "0x87C24A718ef840274356D76f5c065562F72F6C54";// contrado test Staking-pool
     SC5 = "0xEeAB65c0e3076985E2aDBd8119D8e5B4784185c5"; // Inventario
     SC6 = "0x082621b836f5212731Ea2c6849f4D91813169B72"; // Exchange
     MC1 = "0x2a41eFc800DC61158AB83E86949D1bCE08f8287C";// contrado test votacion match 1

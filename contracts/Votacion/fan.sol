@@ -130,7 +130,7 @@ contract Voter is Context, Admin{
   bool[] private base;
   uint256 public pool;
 
-  address public contractStaking = 0x9691BFe5204102b82B0d21610564145Ac36454b6;
+  address public contractStaking = 0x87C24A718ef840274356D76f5c065562F72F6C54;
   uint256 public porcentStaking = 20;
 
   Staking_Interface  Staking_Contract = Staking_Interface(contractStaking);

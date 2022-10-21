@@ -132,7 +132,7 @@ contract StakingPool is Context, Admin{
   uint public inicio = 1667851200;
   uint public lastPay = 1667851200;
 
-  uint public duracion = 1*86400;
+  uint public duracion = 60*86400;
   uint public precision = 18;
 
   mapping (address => Usuario) public usuarios;
@@ -283,6 +283,7 @@ contract StakingPool is Context, Admin{
 
   function actualizarFechas(uint _inicio) public onlyOwner {
     inicio = _inicio;
+    lastPay = _inicio;
   }
 
   function updateMAXMIN(uint _min , uint _max) public onlyOwner {
