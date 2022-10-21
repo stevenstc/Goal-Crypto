@@ -19,6 +19,8 @@ import abiFan from "../../abi/fan"
 import abiStaking from "../../abi/staking"
 import abiFaucet from "../../abi/faucet"
 import abiExchange from "../../abi/exchange"
+import abiMatch from "../../abi/match"
+
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
@@ -146,12 +148,12 @@ class App extends Component {
         )
 
         var contractMatch1 = new web3.eth.Contract(
-          abiFan,
+          abiMatch,
           cons.MC1
         );
 
         var contractMatch2 = new web3.eth.Contract(
-          abiFan,
+          abiMatch,
           cons.MC2
         );
 

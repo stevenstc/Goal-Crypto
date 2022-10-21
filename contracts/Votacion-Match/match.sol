@@ -115,7 +115,7 @@ contract Match is Context, Admin{
   using SafeMath for uint256;
 
   address public token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
-  uint256 public fase = 1667937600;
+  uint256 public inicio = 1667937600;
   uint256 public fin = 1670011200;
   uint256 public precio = 50*10**18; 
   uint256 public aumento; 
@@ -199,8 +199,8 @@ contract Match is Context, Admin{
     uint256 costo = precio;
 
     if(aumento != 0){
-      if(block.timestamp > fase ){
-        costo = ((block.timestamp).sub(fase)).div(86400);
+      if(block.timestamp > inicio ){
+        costo = ((block.timestamp).sub(inicio)).div(86400);
         costo = precio.add(costo.mul(aumento));
       }
     }
@@ -240,7 +240,7 @@ contract Match is Context, Admin{
   function votar(uint256 _item) public returns(bool){  
 
     if(block.timestamp >= fin)revert("END");
-    if(block.timestamp < fase)revert("NSTRT");
+    if(block.timestamp < inicio)revert("NSTRT");
 
       
     if(fans[_msgSender()].length != base.length){
@@ -296,7 +296,7 @@ contract Match is Context, Admin{
 
   function updateFases(uint256 _inicio, uint256 _fin) public onlyOwner returns(bool){  
     
-    fase = _inicio;
+    inicio = _inicio;
     fin = _fin;
 
     return true;

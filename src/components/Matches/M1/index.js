@@ -65,10 +65,22 @@ export default class HomeFan extends Component {
       }
     }
 
-    if(votosTeam >= 3){
+    if(votosTeam >= 1){
       alert("max of votes reached");
       return;
     }
+
+    var inicio = await this.props.wallet.contractMatch1.methods
+      .inicio()
+      .call({ from: this.props.currentAccount });
+    inicio = inicio*1000;
+
+    var fin = await this.props.wallet.contractMatch1.methods
+      .fin()
+      .call({ from: this.props.currentAccount });
+    fin = fin*1000;
+
+    if(Date.now() > fin){alert("This vote is over. look for a new match"); return;}
 
     var aprovado = await this.props.wallet.contractToken.methods
       .allowance(this.props.currentAccount, this.props.wallet.contractMatch1._address)
@@ -89,6 +101,8 @@ export default class HomeFan extends Component {
         .send({ from: this.props.currentAccount });
 
       }
+
+      if(Date.now() < inicio){alert("Match no started plese wait"); return;}
 
       await this.props.wallet.contractMatch1.methods
       .votar(id)
@@ -111,15 +125,23 @@ export default class HomeFan extends Component {
       .largoItems()
       .call({ from: this.props.currentAccount });
 
+    var inicio = await this.props.wallet.contractMatch1.methods
+      .inicio()
+      .call({ from: this.props.currentAccount });
+    inicio = inicio*1000;
+
     var fin = await this.props.wallet.contractMatch1.methods
       .fin()
       .call({ from: this.props.currentAccount });
+    fin = fin*1000;
+
+    
 
       //{filter:"grayscale(100%)"}
 
       /*
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
-      {},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
+      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
       {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
@@ -141,6 +163,15 @@ export default class HomeFan extends Component {
 
     ];
 
+    var filterElimitaded = [
+      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
+      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
+      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
+      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
+      {filter:"grayscale(100%)"},{filter:"grayscale(100%)"},{filter:"grayscale(100%)"},
+      {filter:"grayscale(100%)"}
+    ]
+
     for (let index = 0; index < result; index++) {
 
       var valor = await this.props.wallet.contractMatch1.methods
@@ -149,15 +180,15 @@ export default class HomeFan extends Component {
 
        //console.log(valor)
 
-      if(valor === "0"){
-        if(Date.now() >= fin*1000){
-          valor = "Finished";
-        }else{
-          valor = "Soon...";
-        }
-        
-      }else{
-        valor = valor/10**18 +" GCP";
+       valor = valor/10**18 +" GCP";
+
+      if(Date.now() > fin){
+        valor = "Finished";
+        //eliminated = filterElimitaded;
+      }
+
+      if(Date.now() < inicio){
+        valor = "Soon...";
       }
 
       if(eliminated[index].filter){
@@ -279,7 +310,7 @@ export default class HomeFan extends Component {
 
         <header className="masthead text-center text-white">
           <h2>Match #1 | Pool {this.state.balanceContract} GCP</h2>
-          <div className="masthead-content" class="bg-image"
+          <div className="masthead-content bg-image"
                 style={{ backgroundImage: "url('images/fondo.png')", backgroundSize: "100%", backgroundPosition: "center",backgroundRepeat: "no-repeat"}}>
             <div className="container px-5">
               <div className="row justify-content-md-center">

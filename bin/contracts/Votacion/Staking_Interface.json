@@ -1,62 +1,25 @@
 {
-    "contractName": "Ownable",
+    "contractName": "Staking_Interface",
     "abi": [
         {
-            "inputs": [],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "anonymous": false,
             "inputs": [
                 {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "previousOwner",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "newOwner",
-                    "type": "address"
+                    "internalType": "uint256",
+                    "name": "_value",
+                    "type": "uint256"
                 }
             ],
-            "name": "OwnershipTransferred",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-                {
-                    "internalType": "address payable",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address payable",
-                    "name": "newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "transferOwnership",
+            "name": "recargarPool",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         }
     ],
-    "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"c:/Users/STC/Documents/GitHub/goal-crypto/contracts/Votacion/fan.sol\":\"Ownable\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"c:/Users/STC/Documents/GitHub/goal-crypto/contracts/Votacion/fan.sol\":{\"keccak256\":\"0x0ccd227dc8f206fd2d01fa24b9112d3fd0262e8d61226b3af7bbdf54efd890eb\",\"license\":\"Apache 2.0\",\"urls\":[\"bzz-raw://c52c5a294ac181622f07a6c257cec6815dd580b5b927c33b1a0655a238c83100\",\"dweb:/ipfs/QmaPSHwhHV6nJoYiXbMKt8ikf7VsnN88epXS6T6xgn5aSu\"]}},\"version\":1}",
-    "bytecode": "608060405234801561001057600080fd5b50600080546001600160a01b0319163317815561017390819061003390396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80638da5cb5b1461003b578063f2fde38b1461006a575b600080fd5b60005461004e906001600160a01b031681565b6040516001600160a01b03909116815260200160405180910390f35b61007d61007836600461010d565b61007f565b005b6000546001600160a01b0316336001600160a01b03161461009f57600080fd5b6001600160a01b0381166100b257600080fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b60006020828403121561011f57600080fd5b81356001600160a01b038116811461013657600080fd5b939250505056fea2646970667358221220f8838fe36e443134105609a1b3d1ea682b3c7796337c228c2555d8c90a730cc164736f6c63430008110033",
-    "deployedBytecode": "608060405234801561001057600080fd5b50600436106100365760003560e01c80638da5cb5b1461003b578063f2fde38b1461006a575b600080fd5b60005461004e906001600160a01b031681565b6040516001600160a01b03909116815260200160405180910390f35b61007d61007836600461010d565b61007f565b005b6000546001600160a01b0316336001600160a01b03161461009f57600080fd5b6001600160a01b0381166100b257600080fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b60006020828403121561011f57600080fd5b81356001600160a01b038116811461013657600080fd5b939250505056fea2646970667358221220f8838fe36e443134105609a1b3d1ea682b3c7796337c228c2555d8c90a730cc164736f6c63430008110033",
-    "sourceMap": "1516:486:0:-:0;;;1670:55;;;;;;;;;-1:-1:-1;1690:5:0;:29;;-1:-1:-1;;;;;;1690:29:0;1389:10;1690:29;;;1516:486;;;;;;;;",
-    "deployedSourceMap": "1516:486:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1549:28;;;;;-1:-1:-1;;;;;1549:28:0;;;;;;-1:-1:-1;;;;;194:32:1;;;176:51;;164:2;149:18;1549:28:0;;;;;;;1808:189;;;;;;:::i;:::-;;:::i;:::-;;;1776:5;;-1:-1:-1;;;;;1776:5:0;1389:10;-1:-1:-1;;;;;1760:21:0;;1757:33;;1782:8;;;1757:33;-1:-1:-1;;;;;1888:22:0;::::1;1885:34;;1911:8;::::0;::::1;1885:34;1952:5;::::0;;1931:37:::1;::::0;-1:-1:-1;;;;;1931:37:0;;::::1;::::0;1952:5;::::1;::::0;1931:37:::1;::::0;::::1;1975:5;:16:::0;;-1:-1:-1;;;;;;1975:16:0::1;-1:-1:-1::0;;;;;1975:16:0;;;::::1;::::0;;;::::1;::::0;;1808:189::o;238:294:1:-;305:6;358:2;346:9;337:7;333:23;329:32;326:52;;;374:1;371;364:12;326:52;400:23;;-1:-1:-1;;;;;452:31:1;;442:42;;432:70;;498:1;495;488:12;432:70;521:5;238:294;-1:-1:-1;;;238:294:1:o",
+    "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"recargarPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"c:/Users/STC/Documents/GitHub/goal-crypto/contracts/Votacion/fan.sol\":\"Staking_Interface\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"c:/Users/STC/Documents/GitHub/goal-crypto/contracts/Votacion/fan.sol\":{\"keccak256\":\"0x0ccd227dc8f206fd2d01fa24b9112d3fd0262e8d61226b3af7bbdf54efd890eb\",\"license\":\"Apache 2.0\",\"urls\":[\"bzz-raw://c52c5a294ac181622f07a6c257cec6815dd580b5b927c33b1a0655a238c83100\",\"dweb:/ipfs/QmaPSHwhHV6nJoYiXbMKt8ikf7VsnN88epXS6T6xgn5aSu\"]}},\"version\":1}",
+    "bytecode": "",
+    "deployedBytecode": "",
+    "sourceMap": "",
+    "deployedSourceMap": "",
     "sourcePath": "c:/Users/STC/Documents/GitHub/goal-crypto/contracts/Votacion/fan.sol",
     "compiler": {
         "name": "solc",
@@ -14061,18 +14024,7 @@
         "src": "0:8342:0"
     },
     "functionHashes": {
-        "owner()": "8da5cb5b",
-        "transferOwnership(address)": "f2fde38b"
+        "recargarPool(uint256)": "c07f54bc"
     },
-    "gasEstimates": {
-        "creation": {
-            "codeDepositCost": "74200",
-            "executionCost": "24364",
-            "totalCost": "98564"
-        },
-        "external": {
-            "owner()": "2303",
-            "transferOwnership(address)": "30383"
-        }
-    }
+    "gasEstimates": null
 }
