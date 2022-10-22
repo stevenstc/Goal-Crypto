@@ -37,7 +37,7 @@ library SafeMath {
 
 }
 
-interface TRC20_Interface {
+interface BEP20_Interface {
   function allowance(address _owner, address _spender) external view returns (uint remaining);
   function transferFrom(address _from, address _to, uint _value) external returns (bool);
   function transfer(address direccion, uint cantidad) external returns (bool);
@@ -60,63 +60,10 @@ abstract contract Context {
   }
 }
 
-contract Ownable is Context {
-  address payable public owner;
-  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-  constructor(){
-    owner = payable(_msgSender());
-  }
-  modifier onlyOwner() {
-    if(_msgSender() != owner)revert();
-    _;
-  }
-  function transferOwnership(address payable newOwner) public onlyOwner {
-    if(newOwner == address(0))revert();
-    emit OwnershipTransferred(owner, newOwner);
-    owner = newOwner;
-  }
-
-}
-
-contract Admin is Context, Ownable{
-  mapping (address => bool) public admin;
-
-  event NewAdmin(address indexed admin);
-  event AdminRemoved(address indexed admin);
-
-  constructor(){
-    admin[_msgSender()] = true;
-  }
-
-  modifier onlyAdmin() {
-    if(!admin[_msgSender()])revert();
-    _;
-  }
-
-  function makeNewAdmin(address payable _newadmin) public onlyOwner {
-    if(_newadmin == address(0))revert();
-    emit NewAdmin(_newadmin);
-    admin[_newadmin] = true;
-  }
-
-  function makeRemoveAdmin(address payable _oldadmin) public onlyOwner {
-    if(_oldadmin == address(0))revert();
-    emit AdminRemoved(_oldadmin);
-    admin[_oldadmin] = false;
-  }
-
-}
-
-contract StakingPool is Context, Admin{
+contract StakingPool is Context{
   using SafeMath for uint;
 
-  TRC20_Interface CSC_Contract = TRC20_Interface(0x389ccc30de1d311738Dffd3F60D4fD6188970F45);
-  TRC20_Interface OTRO_Contract = TRC20_Interface(0x389ccc30de1d311738Dffd3F60D4fD6188970F45);
-
-  struct Usuario {
-    uint participacion;
-
-  }
+  BEP20_Interface BEP20_Contract = BEP20_Interface(0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08);
 
   mapping(address => uint256[]) public deposito;
   mapping(address => uint256[]) public tokenInterno;
@@ -134,8 +81,6 @@ contract StakingPool is Context, Admin{
 
   uint public duracion = 60*86400;
   uint public precision = 18;
-
-  mapping (address => Usuario) public usuarios;
 
   constructor() { }
 
@@ -157,7 +102,7 @@ contract StakingPool is Context, Admin{
     if(_token < MIN_DEPOSIT)revert();
     if(depositoTotalToken(msg.sender)+_token > MAX_DEPOSIT)revert();
 
-    if( !CSC_Contract.transferFrom(msg.sender, address(this), _token) )revert();
+    if( !BEP20_Contract.transferFrom(msg.sender, address(this), _token) )revert();
 
     tokenInterno[msg.sender].push(compra(_token));
     TOTAL_PARTICIPACIONES += compra(_token);
@@ -180,7 +125,7 @@ contract StakingPool is Context, Admin{
 
     uint pagare = pago(tokenInterno[msg.sender][_deposito]);
     
-    if( !CSC_Contract.transfer(msg.sender, pagare) )revert();
+    if( !BEP20_Contract.transfer(msg.sender, pagare) )revert();
 
     TOTAL_PARTICIPACIONES -= tokenInterno[msg.sender][_deposito];
     PAYER_POOL_BALANCE -= pagare;
@@ -222,7 +167,7 @@ contract StakingPool is Context, Admin{
 
   function recargarPool(uint _token) public{
 
-    if( !CSC_Contract.transferFrom(msg.sender, address(this), _token) )revert();
+    if( !BEP20_Contract.transferFrom(msg.sender, address(this), _token) )revert();
     DISTRIBUTION_POOL += _token;
 
   }
@@ -258,7 +203,7 @@ contract StakingPool is Context, Admin{
     uint tokenIN = totalDividendos(_user);
     uint tokenEX = pago(totalDividendos(_user));
 
-    if( !CSC_Contract.transfer(_user, tokenEX ))revert();
+    if( !BEP20_Contract.transfer(_user, tokenEX ))revert();
 
     for (uint256 index = 0; index < dividendos(_user).length; index++) {
       tokenInterno[_user][index] -= dividendos(_user)[index];
@@ -266,48 +211,6 @@ contract StakingPool is Context, Admin{
 
     TOTAL_PARTICIPACIONES -= tokenIN;
     PAYER_POOL_BALANCE -= tokenEX;
-
-  }
-
-  function ChangeToken(address _tokenTRC20) public onlyOwner {
-    CSC_Contract = TRC20_Interface(_tokenTRC20);
-  }
-
-  function ChangeTokenOTRO(address _tokenTRC20) public onlyOwner {
-    OTRO_Contract = TRC20_Interface(_tokenTRC20);
-  }
-
-  function updateTimeDistribution(uint _time) public onlyOwner {
-    TIME_DISTRIBUTION = _time;
-  }
-
-  function actualizarFechas(uint _inicio) public onlyOwner {
-    inicio = _inicio;
-    lastPay = _inicio;
-  }
-
-  function updateMAXMIN(uint _min , uint _max) public onlyOwner {
-    MIN_DEPOSIT = _min;
-    MAX_DEPOSIT = _max;
-  }
-
-  function updateDuracion(uint _time) public onlyOwner {
-    duracion = _time;
-  }
-
-  function redimCSC(uint _value) public onlyOwner {
-    if ( CSC_Contract.balanceOf(address(this)) < _value)revert();
-    CSC_Contract.transfer(owner, _value);
-  }
-
-  function redimOTRO() public onlyOwner {
-    uint256 valor = OTRO_Contract.balanceOf(address(this));
-    OTRO_Contract.transfer(owner, valor);
-  }
-
-  function redimBNB() public onlyOwner {
-    if ( address(this).balance == 0)revert();
-    payable(owner).transfer( address(this).balance );
 
   }
 

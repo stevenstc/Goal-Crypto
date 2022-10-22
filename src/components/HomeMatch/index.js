@@ -60,9 +60,9 @@ export default class HomeFan extends Component {
           </div>
         </header>
 
-        <M1 wallet={this.props.wallet} currentAccount={this.props.currentAccount}/>
         <M2 wallet={this.props.wallet} currentAccount={this.props.currentAccount}/>
 
+        <M1 wallet={this.props.wallet} currentAccount={this.props.currentAccount}/>
 
         <div className="container mt-3 mb-3">
           <div className="row justify-content-md-center">

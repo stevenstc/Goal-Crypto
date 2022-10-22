@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 // SPDX-License-Identifier: Apache 2.0
 
-interface TRC20_Interface {
+interface BEP20_Interface {
   function allowance(address _owner, address _spender) external view returns (uint remaining);
   function transferFrom(address _from, address _to, uint _value) external returns (bool);
   function transfer(address direccion, uint cantidad) external returns (bool);
@@ -64,25 +64,7 @@ abstract contract Context {
   }
 }
 
-contract Ownable is Context {
-  address payable public owner;
-  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-  constructor(){
-    owner = payable(_msgSender());
-  }
-  modifier onlyOwner() {
-    if(_msgSender() != owner)revert();
-    _;
-  }
-  function transferOwnership(address payable newOwner) public onlyOwner {
-    if(newOwner == address(0))revert();
-    emit OwnershipTransferred(owner, newOwner);
-    owner = newOwner;
-  }
-
-}
-
-contract Admin is Context, Ownable{
+contract Admin is Context{
   mapping (address => bool) public admin;
 
   event NewAdmin(address indexed admin);
@@ -97,13 +79,13 @@ contract Admin is Context, Ownable{
     _;
   }
 
-  function makeNewAdmin(address payable _newadmin) public onlyOwner {
+  function makeNewAdmin(address payable _newadmin) public onlyAdmin {
     if(_newadmin == address(0))revert();
     emit NewAdmin(_newadmin);
     admin[_newadmin] = true;
   }
 
-  function makeRemoveAdmin(address payable _oldadmin) public onlyOwner {
+  function makeRemoveAdmin(address payable _oldadmin) public onlyAdmin {
     if(_oldadmin == address(0))revert();
     emit AdminRemoved(_oldadmin);
     admin[_oldadmin] = false;
@@ -120,7 +102,7 @@ contract Voter is Context, Admin{
   uint256 public precio = 50*10**18; 
   uint256 public aumento = 7*10**18; 
 
-  TRC20_Interface CSC_Contract = TRC20_Interface(token);
+  BEP20_Interface BEP20_Contract = BEP20_Interface(token);
 
   mapping (address => bool[]) public fans;
 
@@ -130,7 +112,7 @@ contract Voter is Context, Admin{
   bool[] private base;
   uint256 public pool;
 
-  address public contractStaking = 0x87C24A718ef840274356D76f5c065562F72F6C54;
+  address public contractStaking = 0xB0ECC2A9De8918C2E02Ea7Cd565AE2eeCdacE0F8;
   uint256 public porcentStaking = 20;
 
   Staking_Interface  Staking_Contract = Staking_Interface(contractStaking);
@@ -174,21 +156,8 @@ contract Voter is Context, Admin{
     return resultado;
   }
   
-  function setGanador(uint256 _item) public onlyOwner returns(uint256){  
-    
+  function setGanador(uint256 _item) public onlyAdmin {  
     items[_item] = true;
-
-    return _item;
-
-  }
-  
-  function setToken(address _tokebp20) public onlyOwner returns(address){  
-    
-    CSC_Contract = TRC20_Interface(_tokebp20);
-    token = _tokebp20;
-
-    return _tokebp20;
-
   }
   
   function tiempo() public view returns(uint256){
@@ -208,8 +177,8 @@ contract Voter is Context, Admin{
   }
 
   function aprobarBalnc(uint256 val) public {
-    if( CSC_Contract.allowance(address(this), contractStaking) < val){
-      CSC_Contract.approve(contractStaking, 115792089237316195423570985008687907853269984665640564039457584007913129639935); 
+    if( BEP20_Contract.allowance(address(this), contractStaking) < val){
+      BEP20_Contract.approve(contractStaking, 115792089237316195423570985008687907853269984665640564039457584007913129639935); 
     }
 
   }
@@ -245,13 +214,13 @@ contract Voter is Context, Admin{
     }
 
     if(valor() > 0 &&  ganador() == 0 && limit(_msgSender()) < 3 ){
-      if(fans[_msgSender()][_item] == true )revert("item ya adquirido");
+      if(fans[_msgSender()][_item] == true )revert("IYA");
   
-      if(!CSC_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("transferencia fallida");
+      if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valor() ))revert("TF");
 
       if(wallets.length > 0){
         for (uint256 index = 0; index < wallets.length; index++) {
-          CSC_Contract.transfer( wallets[index], valor().mul(porcents[index]).div(1000) );
+          BEP20_Contract.transfer( wallets[index], valor().mul(porcents[index]).div(1000) );
         }
       }
       aprobarBalnc(valor().mul(porcentStaking).div(1000));
@@ -270,54 +239,9 @@ contract Voter is Context, Admin{
   function reclamar() public {  
 
     if(ganador() <= 0)revert("NG");
-    if(!CSC_Contract.transfer(_msgSender(), ganador() ) )revert("transaccion fallida");
+    if(!BEP20_Contract.transfer(_msgSender(), ganador() ) )revert("TF");
 
     fans[_msgSender()] = base;
-
-  }
-
-  function ReIniciar() public onlyOwner {  
-    items = base;
-  }
-
-  function updateWalletStaking(address _wallet, uint256 _porcent) public onlyOwner {  
-    contractStaking = _wallet;
-    Staking_Contract = Staking_Interface(contractStaking);
-    porcentStaking = _porcent;
-  }
-
-  function updateWalletsFees(address[] memory _wallets, uint256[] memory _porcents) public onlyOwner {  
-    wallets = _wallets;
-    porcents = _porcents;
-  }
-
-  function updateFases(uint256 _inicio, uint256 _fin) public onlyOwner returns(bool){  
-    
-    inicio = _inicio;
-    fin = _fin;
-
-    return true;
-
-  }
-
-  function updatePrecios(uint256 _precio, uint256 _aumento) public onlyOwner returns(bool){  
-    precio = _precio;
-    aumento = _aumento;
-    return true;
-  }
-
-  function redimToken(uint256 _value) public onlyOwner returns (uint256) {
-
-    if ( CSC_Contract.balanceOf(address(this)) < _value)revert("saldo insuficiente");
-    CSC_Contract.transfer(owner, _value);
-    return _value;
-
-  }
-
-  function redimBNB() public onlyOwner returns (uint256){
-
-    owner.transfer(address(this).balance);
-    return address(this).balance;
 
   }
 

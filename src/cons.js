@@ -1,18 +1,20 @@
-var TOKEN = "0x7Ca78Da43388374E0BA3C46510eAd7473a1101d4"; //token principal
-var tokenCSC = "0x7Ca78Da43388374E0BA3C46510eAd7473a1101d4"; //token principal
+var TOKEN = "0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08"; //token principal
+var tokenCSC = "0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08"; //token principal
 var tokenUSDT = "0x55d398326f99059fF775485246999027B3197955"; //USDT
 
 var SC = "0x2846df5d668C1B4017562b7d2C1E471373912509";// Market
-var SC2 = "0xbA5ff42070bF60fB307e643b3e458F76E84293Db";// votacion
-var SC3 = "0x99dB6D082E5abD682dC8F4791F10FB39Bc334a9c";// Staking
+var SC2 = "0xCFC32818E73C6dfc8b94d783049ABB40d44193d0";// votacion
+var SC3 = "0xB0ECC2A9De8918C2E02Ea7Cd565AE2eeCdacE0F8";// Staking pool
 
 const SC4 = "0xe5578751439d52cf9958c4cf1A91eeb3b11F854C";// Faucet Testent
 
 var SC5 = "0x16Da4914542574F953b31688f20f1544d4E89537";// Inventario
-var SC6 = "0x7eeAA02dAc001bc589703B6330067fdDAeAcAc87";//ultimo csc old "0x42D3ad6032311220C48ccee4cE5401308F7AC88A";//OLD  "0x907c4eADcd829Eff4084E6615bf6651938DE56C6";// Exchange
+var SC6 = "0x7eeAA02dAc001bc589703B6330067fdDAeAcAc87";// Exchange
 
-var MC1 = "0xbA5ff42070bF60fB307e643b3e458F76E84293Db";// match 1
+var MC1 = "0x03f35b2923ebf59e7768852ae758D0b7B5FA8445";// match 1
 var MC2 = "0xbA5ff42070bF60fB307e643b3e458F76E84293Db";// match 2
+var MC3 = "0x03f35b2923ebf59e7768852ae758D0b7B5FA8445";// match 3
+
 
 var chainId = '0x38';
 
@@ -24,7 +26,7 @@ var API2 = "";
 
 var WALLETPAY = "0x00326ad2E5ADb9b95035737fD4c56aE452C2c965";
 
-const TESTNET = true; 
+const TESTNET = false; 
 
 if(TESTNET){
     tokenCSC = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"//token no correcto
@@ -37,6 +39,8 @@ if(TESTNET){
     SC6 = "0x082621b836f5212731Ea2c6849f4D91813169B72"; // Exchange
     MC1 = "0x2a41eFc800DC61158AB83E86949D1bCE08f8287C";// contrado test votacion match 1
     MC2 = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1";// contrado test votacion match 2
+    MC3 = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1";// contrado test votacion match 3
+
 
 
     chainId = '0x61';
