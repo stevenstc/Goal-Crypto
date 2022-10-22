@@ -49,7 +49,7 @@ export default class HomeStaking extends Component {
     pool = new BigNumber(pool).shiftedBy(-18).decimalPlaces(6).toString(10)
 
     this.setState({
-      balance: balance,
+      balanceCSC: balance,
       bloqueado: bloqueado,
       pool: pool
     }) 
