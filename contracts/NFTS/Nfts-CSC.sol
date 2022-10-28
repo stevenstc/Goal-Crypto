@@ -1,4 +1,4 @@
-pragma solidity ^0.8.0;
+pragma solidity >=0.8.0;
 // SPDX-License-Identifier: Apache-2.0 
 
 library SafeMath {
@@ -53,13 +53,24 @@ library SafeMath {
     }
 }
 
-abstract contract Context {
-  function _msgSender() internal view virtual returns (address) {
-    return msg.sender;
-  }
-  function _msgData() internal view virtual returns (bytes calldata) {
-    return msg.data;
-  }
+library Counters {
+    using SafeMath for uint256;
+
+    struct Counter {
+        uint256 _value; // default: 0
+    }
+
+    function current(Counter storage counter) internal view returns (uint256) {
+        return counter._value;
+    }
+
+    function increment(Counter storage counter) internal {
+        counter._value += 1;
+    }
+
+    function decrement(Counter storage counter) internal {
+        counter._value = counter._value.sub(1);
+    }
 }
 
 library Roles {
@@ -83,26 +94,53 @@ library Roles {
     }
 }
 
-library Counters {
-    using SafeMath for uint256;
-
-    struct Counter {
-        uint256 _value; // default: 0
-    }
-
-    function current(Counter storage counter) internal view returns (uint256) {
-        return counter._value;
-    }
-
-    function increment(Counter storage counter) internal {
-        counter._value += 1;
-    }
-
-    function decrement(Counter storage counter) internal {
-        counter._value = counter._value.sub(1);
-    }
+interface IBEP721 {
+    function balanceOf(address owner) external view returns (uint256 balance);
+    function ownerOf(uint256 tokenId) external view returns (address owner);
+    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+    function transferFrom(address from, address to, uint256 tokenId) external;
+    function approve(address to, uint256 tokenId) external;
+    function getApproved(uint256 tokenId) external view returns (address operator);
+    function setApprovalForAll(address operator, bool _approved) external;
+    function isApprovedForAll(address owner, address operator) external view returns (bool);
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) external;
 }
 
+
+interface IBEP721Metadata {
+    function name() external view returns (string memory);
+    function symbol() external view returns (string memory);
+    function tokenURI(uint256 tokenId) external view returns (string memory);
+}
+
+interface IBEP721Receiver {
+
+    function onBEP721Received(address operator, address from, uint256 tokenId, bytes memory data) external returns (bytes4);
+}
+
+interface IBEP721Enumerable is IBEP721 {
+    function totalSupply() external view returns (uint256);
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256 tokenId);
+    function tokenByIndex(uint256 index) external view returns (uint256);
+}
+
+interface IBEP165 {
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+
+abstract contract Context {
+
+  constructor () { }
+
+  function _msgSender() internal view returns (address payable) {
+    return payable(msg.sender);
+  }
+
+  function _msgData() internal view returns (bytes memory) {
+    this; 
+    return msg.data;
+  }
+}
 
 contract MinterRole is Context {
     using Roles for Roles.Role;
@@ -144,41 +182,7 @@ contract MinterRole is Context {
     }
 }
 
-interface IBEP165 {
-    function supportsInterface(bytes4 interfaceId) external view returns (bool);
-}
-
-interface IBEP721 {
-    function balanceOf(address owner) external view returns (uint256 balance);
-    function ownerOf(uint256 tokenId) external view returns (address owner);
-    function safeTransferFrom(address from, address to, uint256 tokenId) external;
-    function transferFrom(address from, address to, uint256 tokenId) external;
-    function approve(address to, uint256 tokenId) external;
-    function getApproved(uint256 tokenId) external view returns (address operator);
-    function setApprovalForAll(address operator, bool _approved) external;
-    function isApprovedForAll(address owner, address operator) external view returns (bool);
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) external;
-}
-
-
-interface IBEP721Metadata {
-    function name() external view returns (string memory);
-    function symbol() external view returns (string memory);
-    function tokenURI(uint256 tokenId) external view returns (string memory);
-}
-
-interface IBEP721Receiver {
-
-    function onBEP721Received(address operator, address from, uint256 tokenId, bytes memory data) external returns (bytes4);
-}
-
-interface IBEP721Enumerable is IBEP721 {
-    function totalSupply() external view returns (uint256);
-    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256 tokenId);
-    function tokenByIndex(uint256 index) external view returns (uint256);
-}
-
-contract BEP165 {
+contract BEP165 is Context {
 
     bytes4 private constant _INTERFACE_ID_BEP165 = 0x01ffc9a7;
 
@@ -198,7 +202,6 @@ contract BEP165 {
         _supportedInterfaces[interfaceId] = true;
     }
 }
-
 
 contract BEP721 is Context, BEP165 , MinterRole {
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -533,13 +536,10 @@ contract BEP721 is Context, BEP165 , MinterRole {
         return _allTokens.length;
     }
 
-
     function tokenByIndex(uint256 index) public view returns (uint256) {
         require(index < totalSupply(), "BEP721Enumerable: global index out of bounds");
         return _allTokens[index];
     }
-
-    
 
     function _tokensOfOwner(address owner) internal view returns (uint256[] storage) {
         return _ownedTokens[owner];
@@ -549,7 +549,6 @@ contract BEP721 is Context, BEP165 , MinterRole {
         _ownedTokensIndex[tokenId] = _ownedTokens[to].length;
         _ownedTokens[to].push(tokenId);
     }
-
 
     function _addTokenToAllTokensEnumeration(uint256 tokenId) private {
         _allTokensIndex[tokenId] = _allTokens.length;
@@ -586,9 +585,8 @@ contract BEP721 is Context, BEP165 , MinterRole {
     }
 }
 
-
 contract BEP721Token is BEP721 {
-    constructor() BEP721("CryptoSoccer Game Assets", "CS-GA", "") {
+    constructor() BEP721("Goal Crypto Assets", "GCAS", "") {
 
     }
 }
