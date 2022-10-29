@@ -586,7 +586,7 @@ contract BEP721 is Context, BEP165 , MinterRole {
 }
 
 contract BEP721Token is BEP721 {
-    constructor() BEP721("Goal Crypto Assets", "GCAS", "") {
+    constructor() BEP721("Goal Crypto Assets", "GCAS", "https://goal-crypto.tk/nft/") {
 
     }
 }

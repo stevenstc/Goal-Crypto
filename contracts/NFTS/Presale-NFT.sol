@@ -200,7 +200,7 @@ contract PreSaleNFT is Context {
 
         uint256 win = randMod(tipesNFT-1, block.timestamp);
 
-        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked(BEP721_contract.baseURI(),items[win].uri)));
+        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
 
         items[win].cantidad = (items[win].cantidad).sub(1);
         

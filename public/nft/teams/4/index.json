@@ -1,8 +1,8 @@
 {
-  "title": "World Cup",
+  "title": "Spain",
   "name": "legendary",
-  "image": "https://goal-crypto.tk/nft/teams/1/img.png",
-  "fileUrl": "https://goal-crypto.tk/nft/teams/1/img.png",
+  "image": "https://goal-crypto.tk/nft/teams/4/img.png",
+  "fileUrl": "https://goal-crypto.tk/nft/teams/4/img.png",
   "description": "Goal Crypto Game Asset",
   "externalLink": "https://goal-crypto.tk/",
   "attributes": [
@@ -14,7 +14,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Legendary: World Cup"
+      "description": "Legendary: Spain"
     },
     "description": {
       "type": "string",
@@ -22,7 +22,7 @@
     },
     "image":{
       "type": "string",
-      "description": "https://goal-crypto.tk/nft/teams/1/img.png"
+      "description": "https://goal-crypto.tk/nft/teams/4/img.png"
     },
     "created_at": {
       "type": "datetime",

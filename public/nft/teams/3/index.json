@@ -1,8 +1,8 @@
 {
-  "title": "World Cup",
+  "title": "France",
   "name": "legendary",
-  "image": "https://goal-crypto.tk/nft/teams/1/img.png",
-  "fileUrl": "https://goal-crypto.tk/nft/teams/1/img.png",
+  "image": "https://goal-crypto.tk/nft/teams/3/img.png",
+  "fileUrl": "https://goal-crypto.tk/nft/teams/3/img.png",
   "description": "Goal Crypto Game Asset",
   "externalLink": "https://goal-crypto.tk/",
   "attributes": [
@@ -14,7 +14,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Legendary: World Cup"
+      "description": "Legendary: France"
     },
     "description": {
       "type": "string",
@@ -22,7 +22,7 @@
     },
     "image":{
       "type": "string",
-      "description": "https://goal-crypto.tk/nft/teams/1/img.png"
+      "description": "https://goal-crypto.tk/nft/teams/3/img.png"
     },
     "created_at": {
       "type": "datetime",
