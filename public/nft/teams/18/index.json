@@ -1,5 +1,5 @@
 {
-  "title": "Brazil",
+  "title": "Ecuador",
   "name": "Common",
   "image": "https://goal-crypto.tk/nft/teams/18/img.png",
   "fileUrl": "https://goal-crypto.tk/nft/teams/18/img.png",
@@ -14,7 +14,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Common: Brazil"
+      "description": "Common: Ecuador"
     },
     "description": {
       "type": "string",

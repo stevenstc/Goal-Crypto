@@ -1,5 +1,5 @@
 {
-  "title": "Brazil",
+  "title": "Morocco",
   "name": "Common",
   "image": "https://goal-crypto.tk/nft/teams/23/img.png",
   "fileUrl": "https://goal-crypto.tk/nft/teams/23/img.png",
@@ -14,7 +14,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Common: Brazil"
+      "description": "Common: Morocco"
     },
     "description": {
       "type": "string",

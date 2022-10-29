@@ -143,7 +143,7 @@ export default class Market extends Component {
                   }
                   
                 }}>
-                  Buy for {new BigNumber(_items[3][index]).shiftedBy(-18).toString(10)} CSC
+                  Buy for {new BigNumber(_items[3][index]).shiftedBy(-18).toString(10)} GCP
                 </button>
               </div>
             </div>
@@ -190,22 +190,34 @@ export default class Market extends Component {
 
   render() {
     return (
-      <><header className="masthead text-center ">
+      <>
+      <img className="img-fluid" src="assets/img/banner-nft.png" alt="" ></img>
+
+      <header className="masthead text-center ">
       <div className="masthead-content">
         <div className="container px-5">
         <div className="row">
             <div className="col-lg-12 col-md-12 p-4 text-center bg-secondary bg-gradient text-white">
-              <h2 className=" pb-4">CSC available:</h2><br></br>
+              <h2 className=" pb-4">GCP available:</h2><br></br>
               <h3 className=" pb-4">{this.state.balance}</h3>
             </div>
 
           </div>
           <div className="row">
-            <div className="col-lg-12 col-md-12 p-4 text-center">
-              <h2 className=" pb-4">Items</h2>
+            <div className="col-12 p-4 text-center">
+              <h2 className=" pb-4">Buy Pack</h2>
             </div>
 
-            {this.state.itemsMarket}
+            <div className="col-6 p-4 text-center">
+              <img className="img-fluid" src="assets/img/pack1.png" alt="" ></img>
+              <h2 className=" pb-4">Buy Pack for 50 usd (120 GCP)</h2>
+            </div>
+
+            <div className="col-6 p-4 text-center">
+              <img className="img-fluid" src="assets/img/pack2.png" alt="" ></img>
+              <h2 className=" pb-4">Buy Pack for 30 usd (60 GCP)</h2>
+            </div>
+
 
           </div>
         </div>

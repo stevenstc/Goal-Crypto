@@ -227,7 +227,7 @@ class App extends Component {
             return(<Fan2 wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
           case "staking":
             return(<Staking wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
-          case "market":
+          case "pre-sale":
             return(<Market wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
           case "market-v2":
             return(<MarketV2 wallet={this.state.binanceM} currentAccount={this.state.currentAccount} consulta={this.state.walletconsulta}/>);

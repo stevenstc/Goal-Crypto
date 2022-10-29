@@ -1,5 +1,5 @@
 {
-  "title": "Brazil",
+  "title": "Japan",
   "name": "Common",
   "image": "https://goal-crypto.tk/nft/teams/22/img.png",
   "fileUrl": "https://goal-crypto.tk/nft/teams/22/img.png",
@@ -14,7 +14,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Common: Brazil"
+      "description": "Common: Japan"
     },
     "description": {
       "type": "string",
