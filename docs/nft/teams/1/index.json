@@ -1,32 +1,32 @@
 {
-  "title": "Team Epic",
-  "name": "Japón",
-  "image": "https://goal-crypto.tk/nft/epic/t4-japon/img.png",
-  "fileUrl": "https://goal-crypto.tk/nft/teams/epic/t4-japon/img.png",
-  "description": "CryptoSoccer Game Asset",
-  "externalLink": "https://cryptosoccermarket.com/",
+  "title": "World Cup",
+  "name": "Legendary",
+  "image": "https://goal-crypto.tk/nft/teams/1/img.png",
+  "fileUrl": "https://goal-crypto.tk/nft/teams/1/img.png",
+  "description": "Goal Crypto Game Asset",
+  "externalLink": "https://goal-crypto.tk/",
   "attributes": [
     {
       "trait_type": "Creator",
-      "value": "CryptoSoccer"
+      "value": "Goal Crypto"
     }
   ],
   "properties": {
     "name": {
       "type": "string",
-      "description": "Team Epic: Japón"
+      "description": "Legendary: World Cup"
     },
     "description": {
       "type": "string",
-      "description": "CryptoSoccer Game Asset"
+      "description": "Goal Crypto Game Asset"
     },
     "image":{
       "type": "string",
-      "description": "https://cryptosoccermarket.com/nft/teams/epic/t4-japon/img.png"
+      "description": "https://goal-crypto.tk/nft/teams/1/img.png"
     },
     "created_at": {
       "type": "datetime",
-      "description": "2022-06-09T00:00:00.628Z"
+      "description": "2022-10-28T00:00:00.000Z"
     },
     "digital_media_file_type": {
       "type": "string",

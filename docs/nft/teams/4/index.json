@@ -1,0 +1,36 @@
+{
+  "title": "Spain",
+  "name": "Legendary",
+  "image": "https://goal-crypto.tk/nft/teams/4/img.png",
+  "fileUrl": "https://goal-crypto.tk/nft/teams/4/img.png",
+  "description": "Goal Crypto Game Asset",
+  "externalLink": "https://goal-crypto.tk/",
+  "attributes": [
+    {
+      "trait_type": "Creator",
+      "value": "Goal Crypto"
+    }
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Legendary: Spain"
+    },
+    "description": {
+      "type": "string",
+      "description": "Goal Crypto Game Asset"
+    },
+    "image":{
+      "type": "string",
+      "description": "https://goal-crypto.tk/nft/teams/4/img.png"
+    },
+    "created_at": {
+      "type": "datetime",
+      "description": "2022-10-28T00:00:00.000Z"
+    },
+    "digital_media_file_type": {
+      "type": "string",
+      "description": "collectible"
+    }
+  }
+}
