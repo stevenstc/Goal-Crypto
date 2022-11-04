@@ -1,10 +1,10 @@
 {
   "title": "Netherlands",
   "name": "Epic",
-  "image": "https://goal-crypto.tk/nft/teams/8/img.png",
-  "fileUrl": "https://goal-crypto.tk/nft/teams/8/img.png",
+  "image": "https://goal-crypto.com/nft/teams/8/img.png",
+  "fileUrl": "https://goal-crypto.com/nft/teams/8/img.png",
   "description": "Goal Crypto Game Asset",
-  "externalLink": "https://goal-crypto.tk/",
+  "externalLink": "https://goal-crypto.com/",
   "attributes": [
     {
       "trait_type": "Creator",
@@ -22,7 +22,7 @@
     },
     "image":{
       "type": "string",
-      "description": "https://goal-crypto.tk/nft/teams/8/img.png"
+      "description": "https://goal-crypto.com/nft/teams/8/img.png"
     },
     "created_at": {
       "type": "datetime",

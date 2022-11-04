@@ -1,10 +1,10 @@
 {
   "title": "Costa Rica",
   "name": "Common",
-  "image": "https://goal-crypto.tk/nft/teams/16/img.png",
-  "fileUrl": "https://goal-crypto.tk/nft/teams/16/img.png",
+  "image": "https://goal-crypto.com/nft/teams/16/img.png",
+  "fileUrl": "https://goal-crypto.com/nft/teams/16/img.png",
   "description": "Goal Crypto Game Asset",
-  "externalLink": "https://goal-crypto.tk/",
+  "externalLink": "https://goal-crypto.com/",
   "attributes": [
     {
       "trait_type": "Creator",
@@ -22,7 +22,7 @@
     },
     "image":{
       "type": "string",
-      "description": "https://goal-crypto.tk/nft/teams/16/img.png"
+      "description": "https://goal-crypto.com/nft/teams/16/img.png"
     },
     "created_at": {
       "type": "datetime",

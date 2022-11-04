@@ -1,6 +1,7 @@
 var TOKEN = "0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08"; //token principal
 var tokenCSC = "0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08"; //token principal
 var tokenUSDT = "0x55d398326f99059fF775485246999027B3197955"; //USDT
+var tokenNFT = "0x55d398326f99059fF775485246999027B3197955"; //token NFT
 
 var SC = "0x2846df5d668C1B4017562b7d2C1E471373912509";// Market
 var SC2 = "0xCFC32818E73C6dfc8b94d783049ABB40d44193d0";// votacion
@@ -15,6 +16,7 @@ var MC1 = "0x03f35b2923ebf59e7768852ae758D0b7B5FA8445";// match 1
 var MC2 = "0xB8909ADb063Fa491A8F78c1510258B66c96f9670";// match 2
 var MC3 = "0xB8909ADb063Fa491A8F78c1510258B66c96f9670";// match 3
 
+var preSale = "0xB8909ADb063Fa491A8F78c1510258B66c96f9670" //presale NFT
 
 var chainId = '0x38';
 
@@ -32,6 +34,7 @@ if(TESTNET){
     tokenCSC = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"//token no correcto
     tokenUSDT = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc";// usdt de pruebas
     TOKEN = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"; //token de pruebas
+    tokenNFT = "0x4215227B9C913a18a22995988899dFCEB2e07740";
     SC = "0xCB553b2128fAb586E8C6601983cdb134eaBdd989";//"0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";// contrato test market
     SC2 = "0x0C4dDC36273ADBb967C78D3Ee0e7ea79200f1a30";// contrado test votacion fan
     SC3 = "0x87C24A718ef840274356D76f5c065562F72F6C54";// contrado test Staking-pool
@@ -40,6 +43,7 @@ if(TESTNET){
     MC1 = "0x2a41eFc800DC61158AB83E86949D1bCE08f8287C";// contrado test votacion match 1
     MC2 = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1";// contrado test votacion match 2
     MC3 = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1";// contrado test votacion match 3
+    preSale = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1"; // testnet presale NFT
 
 
 
@@ -50,4 +54,4 @@ if(TESTNET){
 
 const FACTOR_GAS = 3;
 
-export default {WALLETPAY, FACTOR_GAS, SC, SC2, SC3, SC4, SC5, SC6, MC1, MC2, TOKEN, tokenCSC, SCK, SCKDTT, API, API2, chainId, tokenUSDT};
+export default {WALLETPAY, FACTOR_GAS, SC, SC2, SC3, SC4, SC5, SC6, MC1, MC2, MC3, preSale, TOKEN, tokenNFT, tokenCSC, SCK, SCKDTT, API, API2, chainId, tokenUSDT};

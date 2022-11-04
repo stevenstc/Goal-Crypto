@@ -171,15 +171,15 @@ export default class HomeStaking extends Component {
 
     var listaDepositos = [];
     for (let index = 0; index < depositos.length; index++) {
-      var valor = new BigNumber(depositos[index]).shiftedBy(-18).decimalPlaces(6).toString(10)
+      let valor = new BigNumber(depositos[index]).shiftedBy(-18).decimalPlaces(6).toString(10)
 
-      var fecha = await this.props.wallet.contractStaking.methods
+      let fecha = await this.props.wallet.contractStaking.methods
       .fecha(this.props.currentAccount,index)
       .call({ from: this.props.currentAccount });
       fecha = fecha*1000;
-      var actual = Date.now()
-      var bot = "success"
-      var func = ()=>{this.retiro(index)};
+      let actual = Date.now()
+      let bot = "success"
+      let func = ()=>{this.retiro(index)};
       if(fecha > actual){
         bot = "secondary";
         func = ()=>{alert("please wait to: \n"+new Date(fecha))};
@@ -192,7 +192,7 @@ export default class HomeStaking extends Component {
 
       fecha = new Date(fecha);
 
-      var fecha2 = "Unavailable until: "+fecha.getDate()+"/"+(1+fecha.getMonth())+"/"+fecha.getFullYear()
+      let fecha2 = "Unavailable until: "+fecha.getDate()+"/"+(1+fecha.getMonth())+"/"+fecha.getFullYear()
       
 
       listaDepositos[index] = (<div key={"cosal"+index}>

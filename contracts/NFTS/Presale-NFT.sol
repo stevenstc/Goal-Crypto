@@ -84,39 +84,6 @@ interface IBEP721 {
     function mintWithTokenURI(address to, uint256 tokenId, string memory _tokenURI) external returns (bool);
 }
 
-library dinamicArray{
-    
-    function addArray(address[] memory oldArray)public pure returns ( address[] memory) {
-
-        //añade un espacio para un nuevo dato
-        address[] memory newArray =   new address[](oldArray.length+1);
-    
-        for(uint i = 0; i < oldArray.length; i++){
-            newArray[i] = oldArray[i];
-        }
-        
-        return newArray;
-    }
-
-    function subArray(address[] memory oldArray)public pure returns ( address[] memory) {
-
-        //borra los espacios que esten con address(0)
-        address[] memory newArray;
-        uint largo;
-
-        for(uint i = 0; i < oldArray.length; i++){
-            if(oldArray[i] != address(0)){
-                newArray = addArray(newArray);
-                newArray[largo] = oldArray[i];
-                largo++;
-            }
-        }
-        
-        return newArray;
-    }
-  
-}
-
 abstract contract Context {
 
   constructor () { }
@@ -131,7 +98,36 @@ abstract contract Context {
   }
 }
 
-contract PreSaleNFT is Context {
+contract Admin is Context{
+  mapping (address => bool) public admin;
+
+  event NewAdmin(address indexed admin);
+  event AdminRemoved(address indexed admin);
+
+  constructor(){
+    admin[_msgSender()] = true;
+  }
+
+  modifier onlyAdmin() {
+    if(!admin[_msgSender()])revert();
+    _;
+  }
+
+  function makeNewAdmin(address payable _newadmin) public onlyAdmin {
+    if(_newadmin == address(0))revert();
+    emit NewAdmin(_newadmin);
+    admin[_newadmin] = true;
+  }
+
+  function makeRemoveAdmin(address payable _oldadmin) public onlyAdmin {
+    if(_oldadmin == address(0))revert();
+    emit AdminRemoved(_oldadmin);
+    admin[_oldadmin] = false;
+  }
+
+}
+
+contract PreSaleNFT is Context, Admin {
 
     using SafeMath for uint256;
 
@@ -140,8 +136,9 @@ contract PreSaleNFT is Context {
     IBEP721 BEP721_contract = IBEP721(0x4215227B9C913a18a22995988899dFCEB2e07740);
 
     uint256 public soldNFT;
-    uint256 tipesNFT = 33;
     uint256 randNonce;
+    uint256 valuePack1 = 715 * 10**18; // 2 items 
+    uint256 valuePack2 = 430 * 10**18; // 1 item
 
     /* comun 0 ||  epico 1 || legendario 2*/
 
@@ -192,22 +189,45 @@ contract PreSaleNFT is Context {
     }
 
     function randMod(uint _modulus, uint _moreRandom) internal view returns(uint256){
-       return uint256(keccak256(abi.encodePacked(soldNFT, tipesNFT, items.length, _moreRandom, block.timestamp, _msgSender(), randNonce))) % _modulus;
+       return uint256(keccak256(abi.encodePacked(soldNFT, items.length, _moreRandom, block.timestamp, _msgSender(), randNonce))) % _modulus;
     }
 
-    function buyPack() public {
+    function buyPack1() public {
         randNonce++; 
 
-        uint256 win = randMod(tipesNFT-1, block.timestamp);
+        if(items.length <= 0)revert("NMI");
 
+        uint256 win = randMod(items.length-1, block.timestamp); // item 1
+
+        if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valuePack1))revert("TF");
         BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
-
         items[win].cantidad = (items[win].cantidad).sub(1);
+        if(items[win].cantidad <= 0){ delete items[win]; }
+
+        randNonce++; 
+
+        win = randMod(items.length-1, (block.timestamp).add(7)); // item 2
+        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
+        items[win].cantidad = (items[win].cantidad).sub(1);
+        if(items[win].cantidad <= 0){ delete items[win]; }
         
-        if(items[win].cantidad <= 0){
-            delete items[win];
-        }
+    }
+
+    function buyPack2() public {
+        randNonce++; 
+
+        uint256 win = randMod(items.length-1, block.timestamp);
+
+        if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valuePack2))revert("TF");
+        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
+        items[win].cantidad = (items[win].cantidad).sub(1);
+        if(items[win].cantidad <= 0){ delete items[win]; }
         
+    }
+
+    function updatePrices(uint256 _valuePack1, uint256 _valuePack2) public onlyAdmin {
+        valuePack1 = _valuePack1;
+        valuePack2 = _valuePack2;
     }
 
 }
