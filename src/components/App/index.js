@@ -37,8 +37,6 @@ var addressStaking = cons.SC3;
 var addressFaucet = cons.SC4;
 var chainId = cons.chainId;
 
-
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -170,7 +168,7 @@ class App extends Component {
 
         var contractPreSale = new web3.eth.Contract(
           abiPreSale,
-          cons.MC2
+          cons.preSale
         );
 
         var loc = document.location.href;

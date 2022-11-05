@@ -63,7 +63,7 @@ abstract contract Context {
 contract StakingPool is Context{
   using SafeMath for uint;
 
-  BEP20_Interface BEP20_Contract = BEP20_Interface(0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08);
+  BEP20_Interface BEP20_Contract = BEP20_Interface(0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77);
 
   mapping(address => uint256[]) public deposito;
   mapping(address => uint256[]) public tokenInterno;

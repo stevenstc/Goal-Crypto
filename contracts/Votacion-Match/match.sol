@@ -96,9 +96,9 @@ contract Admin is Context{
 contract Match is Context, Admin{
   using SafeMath for uint256;
 
-  address public token = 0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08;
+  address public token = 0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77;
   uint256 public inicio = 1667937600;
-  uint256 public fin = 1668974400;
+  uint256 public fin = 1668888000;
   uint256 public precio = 50*10**18; 
   uint256 public aumento; 
 
@@ -112,7 +112,7 @@ contract Match is Context, Admin{
   bool[] private base;
   uint256 public pool;
 
-  address public contractStaking = 0xB0ECC2A9De8918C2E02Ea7Cd565AE2eeCdacE0F8;
+  address public contractStaking = 0xDd5CFf7fCCfd386E857ED03DB574Ed65e6941E98;
   uint256 public porcentStaking = 20;
 
   Staking_Interface  Staking_Contract = Staking_Interface(contractStaking);

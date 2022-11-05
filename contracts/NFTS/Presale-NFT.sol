@@ -131,21 +131,23 @@ contract PreSaleNFT is Context, Admin {
 
     using SafeMath for uint256;
 
-    BEP20_Interface BEP20_Contract = BEP20_Interface(0x2F7A0EE68709788e1Aa8065a300E964993Eb7B08);
+    BEP20_Interface BEP20_Contract = BEP20_Interface(0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77);
 
-    IBEP721 BEP721_contract = IBEP721(0x4215227B9C913a18a22995988899dFCEB2e07740);
+    IBEP721 BEP721_contract = IBEP721(0xA42Ab8e44674651d388348Fd561350d3Ee8b0fe9);
 
     uint256 public soldNFT;
     uint256 randNonce;
     uint256 valuePack1 = 715 * 10**18; // 2 items 
     uint256 valuePack2 = 430 * 10**18; // 1 item
 
+    mapping(uint256 => uint256)public rarezaItem;
+
     /* comun 0 ||  epico 1 || legendario 2*/
 
     struct Item {
-        uint256 cantidad;
-        uint256 tipe;
-        string uri;
+      uint256 cantidad;
+      uint256 tipe;
+      string uri;
 
     }
 
@@ -198,16 +200,20 @@ contract PreSaleNFT is Context, Admin {
         if(items.length <= 0)revert("NMI");
 
         uint256 win = randMod(items.length-1, block.timestamp); // item 1
+        uint256 id = BEP721_contract.totalSupply();
 
         if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valuePack1))revert("TF");
-        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
+        rarezaItem[id] = items[win].tipe;
+        if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
         items[win].cantidad = (items[win].cantidad).sub(1);
         if(items[win].cantidad <= 0){ delete items[win]; }
 
         randNonce++; 
 
         win = randMod(items.length-1, (block.timestamp).add(7)); // item 2
-        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
+        id = BEP721_contract.totalSupply();
+        rarezaItem[id] = items[win].tipe;
+        if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
         items[win].cantidad = (items[win].cantidad).sub(1);
         if(items[win].cantidad <= 0){ delete items[win]; }
         
@@ -217,9 +223,11 @@ contract PreSaleNFT is Context, Admin {
         randNonce++; 
 
         uint256 win = randMod(items.length-1, block.timestamp);
+        uint256 id = BEP721_contract.totalSupply();
 
+        rarezaItem[id] = items[win].tipe;
         if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valuePack2))revert("TF");
-        BEP721_contract.mintWithTokenURI(_msgSender(), BEP721_contract.totalSupply(), string(abi.encodePacked("teams/",items[win].uri)));
+        if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
         items[win].cantidad = (items[win].cantidad).sub(1);
         if(items[win].cantidad <= 0){ delete items[win]; }
         
