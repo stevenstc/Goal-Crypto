@@ -97,7 +97,7 @@ contract Voter is Context, Admin{
   using SafeMath for uint256;
 
   address public token = 0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77;
-  uint256 public inicio = 1667937600;
+  uint256 public inicio = 1668024000;
   uint256 public fin = 1670011200;
   uint256 public precio = 50*10**18; 
   uint256 public aumento = 7*10**18; 
@@ -112,7 +112,7 @@ contract Voter is Context, Admin{
   bool[] private base;
   uint256 public pool;
 
-  address public contractStaking = 0xDd5CFf7fCCfd386E857ED03DB574Ed65e6941E98;
+  address public contractStaking = 0x14CcCeD9FCbCD335CDBcfeCAfcd160a1E4807Fd9;
   uint256 public porcentStaking = 20;
 
   Staking_Interface  Staking_Contract = Staking_Interface(contractStaking);

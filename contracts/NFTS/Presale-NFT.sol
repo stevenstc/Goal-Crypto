@@ -139,6 +139,9 @@ contract PreSaleNFT is Context, Admin {
     uint256 randNonce;
     uint256 valuePack1 = 715 * 10**18; // 2 items 
     uint256 valuePack2 = 430 * 10**18; // 1 item
+    uint public inicio = 1668024000;
+
+    address depositW = 0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77;
 
     mapping(uint256 => uint256)public rarezaItem;
 
@@ -154,88 +157,90 @@ contract PreSaleNFT is Context, Admin {
     Item[] public items;
 
     constructor(){
-        items.push(Item(1,2,"1"));
-        items.push(Item(4,2,"2"));
-        items.push(Item(4,2,"3"));
-        items.push(Item(4,2,"4"));
-        items.push(Item(4,2,"5"));
-        items.push(Item(10,1,"6"));
-        items.push(Item(10,1,"7"));
-        items.push(Item(10,1,"8"));
-        items.push(Item(10,1,"9"));
-        items.push(Item(10,1,"10"));
-        items.push(Item(10,1,"11"));
-        items.push(Item(10,1,"12"));
-        items.push(Item(115,0,"13"));
-        items.push(Item(115,0,"14"));
-        items.push(Item(115,0,"15"));
-        items.push(Item(115,0,"16"));
-        items.push(Item(115,0,"17"));
-        items.push(Item(115,0,"18"));
-        items.push(Item(115,0,"19"));
-        items.push(Item(115,0,"20"));
-        items.push(Item(115,0,"21"));
-        items.push(Item(115,0,"22"));
-        items.push(Item(115,0,"23"));
-        items.push(Item(115,0,"24"));
-        items.push(Item(115,0,"25"));
-        items.push(Item(115,0,"26"));
-        items.push(Item(115,0,"27"));
-        items.push(Item(115,0,"28"));
-        items.push(Item(115,0,"29"));
-        items.push(Item(115,0,"30"));
-        items.push(Item(115,0,"31"));
-        items.push(Item(115,0,"32"));
-        items.push(Item(115,0,"33"));
+      items.push(Item(1,2,"1"));
+      items.push(Item(4,2,"2"));
+      items.push(Item(4,2,"3"));
+      items.push(Item(4,2,"4"));
+      items.push(Item(4,2,"5"));
+      items.push(Item(10,1,"6"));
+      items.push(Item(10,1,"7"));
+      items.push(Item(10,1,"8"));
+      items.push(Item(10,1,"9"));
+      items.push(Item(10,1,"10"));
+      items.push(Item(10,1,"11"));
+      items.push(Item(10,1,"12"));
+      items.push(Item(115,0,"13"));
+      items.push(Item(115,0,"14"));
+      items.push(Item(115,0,"15"));
+      items.push(Item(115,0,"16"));
+      items.push(Item(115,0,"17"));
+      items.push(Item(115,0,"18"));
+      items.push(Item(115,0,"19"));
+      items.push(Item(115,0,"20"));
+      items.push(Item(115,0,"21"));
+      items.push(Item(115,0,"22"));
+      items.push(Item(115,0,"23"));
+      items.push(Item(115,0,"24"));
+      items.push(Item(115,0,"25"));
+      items.push(Item(115,0,"26"));
+      items.push(Item(115,0,"27"));
+      items.push(Item(115,0,"28"));
+      items.push(Item(115,0,"29"));
+      items.push(Item(115,0,"30"));
+      items.push(Item(115,0,"31"));
+      items.push(Item(115,0,"32"));
+      items.push(Item(115,0,"33"));
         
     }
 
     function randMod(uint _modulus, uint _moreRandom) internal view returns(uint256){
-       return uint256(keccak256(abi.encodePacked(soldNFT, items.length, _moreRandom, block.timestamp, _msgSender(), randNonce))) % _modulus;
+      return uint256(keccak256(abi.encodePacked(soldNFT, items.length, _moreRandom, block.timestamp, _msgSender(), randNonce))) % _modulus;
     }
 
     function buyPack1() public {
-        randNonce++; 
+      if(block.timestamp < inicio )revert();
+      randNonce++; 
 
-        if(items.length <= 0)revert("NMI");
+      if(items.length <= 0)revert("NMI");
 
-        uint256 win = randMod(items.length-1, block.timestamp); // item 1
-        uint256 id = BEP721_contract.totalSupply();
+      uint256 win = randMod(items.length-1, block.timestamp); // item 1
+      uint256 id = BEP721_contract.totalSupply();
 
-        if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valuePack1))revert("TF");
-        rarezaItem[id] = items[win].tipe;
-        if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
-        items[win].cantidad = (items[win].cantidad).sub(1);
-        if(items[win].cantidad <= 0){ delete items[win]; }
+      if(!BEP20_Contract.transferFrom(_msgSender(), depositW, valuePack1))revert("TF");
+      rarezaItem[id] = items[win].tipe;
+      if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
+      items[win].cantidad = (items[win].cantidad).sub(1);
+      if(items[win].cantidad <= 0){ delete items[win]; }
 
-        randNonce++; 
+      randNonce++; 
 
-        win = randMod(items.length-1, (block.timestamp).add(7)); // item 2
-        id = BEP721_contract.totalSupply();
-        rarezaItem[id] = items[win].tipe;
-        if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
-        items[win].cantidad = (items[win].cantidad).sub(1);
-        if(items[win].cantidad <= 0){ delete items[win]; }
+      win = randMod(items.length-1, (block.timestamp).add(7)); // item 2
+      id = BEP721_contract.totalSupply();
+      rarezaItem[id] = items[win].tipe;
+      if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
+      items[win].cantidad = (items[win].cantidad).sub(1);
+      if(items[win].cantidad <= 0){ delete items[win]; }
         
     }
 
     function buyPack2() public {
-        randNonce++; 
+      if(block.timestamp < inicio )revert();
+      randNonce++; 
 
-        uint256 win = randMod(items.length-1, block.timestamp);
-        uint256 id = BEP721_contract.totalSupply();
+      uint256 win = randMod(items.length-1, block.timestamp);
+      uint256 id = BEP721_contract.totalSupply();
 
-        rarezaItem[id] = items[win].tipe;
-        if(!BEP20_Contract.transferFrom(_msgSender(), address(this), valuePack2))revert("TF");
-        if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
-        items[win].cantidad = (items[win].cantidad).sub(1);
-        if(items[win].cantidad <= 0){ delete items[win]; }
+      rarezaItem[id] = items[win].tipe;
+      if(!BEP20_Contract.transferFrom(_msgSender(), depositW, valuePack2))revert("TF");
+      if(!BEP721_contract.mintWithTokenURI(_msgSender(), id, string(abi.encodePacked("teams/",items[win].uri))))revert("FP");
+      items[win].cantidad = (items[win].cantidad).sub(1);
+      if(items[win].cantidad <= 0){ delete items[win]; }
         
     }
 
     function updatePrices(uint256 _valuePack1, uint256 _valuePack2) public onlyAdmin {
-        valuePack1 = _valuePack1;
-        valuePack2 = _valuePack2;
+      valuePack1 = _valuePack1;
+      valuePack2 = _valuePack2;
     }
 
 }

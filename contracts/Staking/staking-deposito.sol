@@ -76,8 +76,8 @@ contract StakingPool is Context{
   uint public TOTAL_STAKING;
   uint public TOTAL_PARTICIPACIONES;
   uint public PAYER_POOL_BALANCE;
-  uint public inicio = 1667851200;
-  uint public lastPay = 1667851200;
+  uint public inicio = 1668024000;
+  uint public lastPay = 1668024000;
 
   uint public duracion = 60*86400;
   uint public precision = 18;
